@@ -19,7 +19,7 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{1A6A9C11-BCB8-43D1-BF16-8CCF3B9F6330}</ProjectGuid>
-    <RootNamespace>LearnOpenGL1</RootNamespace>
+    <RootNamespace>Math_modelisaiton_2D_3D</RootNamespace>
     <ProjectName>Modelisation2D3D</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
