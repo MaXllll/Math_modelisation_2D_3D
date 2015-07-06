@@ -29,7 +29,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 const GLuint WIDTH = 1200, HEIGHT = 800;
 
 //Grid dimensions
-const GLuint GRID_W = 3, GRID_H = 3;
+const GLuint GRID_W = 10, GRID_H = 10;
 
 
 EsgiShader basicShader;
@@ -112,26 +112,25 @@ int main()
 	GLfloat vertices[] = {
 		0.f, 0.f, 0.0f,
 		0.5f, 0.f, 0.0f,
-		1.f, 0.f, 0.0f,
-		1.5f, 0.f, 0.0f,
 		0.f, 0.5f, 0.0f,
 		0.5f, 0.5f, 0.0f,
-		1.f, 0.5f, 0.0f,
-		1.5f, 0.5f, 0.0f,
+
 	};
 
 	GLuint indices[] = {  // Note that we start from 0!
-		0, 4, 1, 5, 2, 6, 3, 7
+		0, 2, 3, 1
 	};
 
 	std::vector<GLfloat> vertices2 = std::vector<GLfloat>();
 	std::vector<GLuint> indices2 = std::vector<GLuint>();
 
-	float incrementW = 0.5f;
-	float incrementH = 0.5f;
+	float incrementW = 0.3f;
+	float incrementH = 0.3f;
 
-	//float incrementW = 5.f / GRID_H;
-	//float incrementH = 5.f / GRID_H;
+	//float increment = GRID_H >= GRID_W?
+
+	//float incrementW = 3.f / GRID_W;
+	//float incrementH = 3.f / GRID_W;
 
 	for (float i = 0.f; i <= GRID_W; i += 1.f)
 	{
@@ -149,7 +148,10 @@ int main()
 		{
 			if (j == 0.f)
 			{
+				//x2 cause Degenerate triangle
 				indices2.push_back((GRID_H + 1) * i);
+				indices2.push_back((GRID_H + 1) * i);
+
 				indices2.push_back((GRID_H + 1) * (i + 1));
 				indices2.push_back((GRID_H + 1) * i + 1);
 			}
@@ -159,8 +161,13 @@ int main()
 				indices2.push_back((GRID_H + 1) * i + j + 1);
 				
 			}
+			//End of the line
 			if (j == GRID_H - 1)
+			{
+				//x2 cause Degenerate triangle
 				indices2.push_back((GRID_H + 1) * (i + 1) + j + 1);
+				indices2.push_back((GRID_H + 1) * (i + 1) + j + 1);
+			}
 		}
 	}
 
@@ -173,9 +180,11 @@ int main()
 
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBufferData(GL_ARRAY_BUFFER, vertices2.size() * sizeof(float), &vertices2.front(), GL_STATIC_DRAW);
+	//glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), &vertices, GL_STATIC_DRAW);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices2.size() * sizeof(float), &indices2.front(), GL_STATIC_DRAW);
+	//glBufferDakta(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), &indices, GL_STATIC_DRAW);
 
 	//glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	//glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), &vertices, GL_STATIC_DRAW);
@@ -209,7 +218,7 @@ int main()
 		glm::mat4 model;
 		glm::mat4 view;
 		glm::mat4 projection;
-		//model = glm::rotate(model, /*(GLfloat)glfwGetTime() **/ 1.0f, glm::vec3(0.5f, 0.0f, 0.0f));  
+		model = glm::rotate(model, /*(GLfloat)glfwGetTime() **/ 1.0f, glm::vec3(0.5f, 0.0f, 0.0f));  
 		view = glm::translate(view, glm::vec3(0.0f, 0.0f, -6.0f));
 		projection = glm::perspective(45.0f, (GLfloat)WIDTH / (GLfloat)HEIGHT, 0.1f, 100.0f);
 		// Get their uniform location
@@ -224,7 +233,8 @@ int main()
 
 		// Draw container
 		glBindVertexArray(VAO);
-		glDrawElements(GL_TRIANGLE_STRIP, 36, GL_UNSIGNED_INT, 0);
+		//glDrawElements(GL_TRIANGLE_STRIP, vertices2.size(), GL_UNSIGNED_INT, 0);
+		glDrawElements(GL_TRIANGLE_STRIP, indices2.size(), GL_UNSIGNED_INT, 0);
 		//glDrawArrays(GL_TRIANGLES, 0, 36);
 		glBindVertexArray(0);
 
