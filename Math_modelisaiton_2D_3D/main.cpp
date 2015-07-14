@@ -24,6 +24,7 @@
 
 // Function prototypes
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
+void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
 
 // Window dimensions
 const GLuint WIDTH = 1200, HEIGHT = 800;
@@ -53,6 +54,8 @@ int main()
 	// Set the required callback functions
 	glfwSetKeyCallback(window, key_callback);
 
+	glfwSetMouseButtonCallback(window, mouse_button_callback);
+
 	// Set this to true so GLEW knows to use a modern approach to retrieving function pointers and extensions
 	glewExperimental = GL_TRUE;
 	// Initialize GLEW to setup the OpenGL Function pointers
@@ -63,51 +66,9 @@ int main()
 
 	glEnable(GL_DEPTH_TEST);
 
-
 	basicShader.LoadVertexShader("basic.vs"); // vs or vert
 	basicShader.LoadFragmentShader("basic.fs");
 	basicShader.Create();
-	// Set up vertex data (and buffer(s)) and attribute pointers
-	//GLfloat vertices[] = {
-	//	-1.f, -1.f, 1.0f,		// 0
-	//	1.f, -1.f, 1.0f,  		// 1	
-	//	1.f, 1.f, 1.0f,			// 2
-	//	-1.f, 1.f, 1.0f,		// 3	
-	//	-1.f, -1.f, -1.0f,		// 4
-	//	1.f, -1.f, -1.0f,		// 5
-	//	1.f, 1.f, -1.0f,		// 6
-	//	-1.f, 1.f, -1.0f		// 7
-	//};
-
-	//GLuint indices[] = {  // Note that we start from 0!
-	//	0, 1, 2, // avant
-	//	2, 3, 0,
-	//	3, 2, 6, // haut
-	//	6, 7, 3,
-	//	7, 6, 5, // arriere
-	//	5, 4, 7,
-	//	1, 5, 6, // droite
-	//	6, 2, 1,
-	//	4, 0, 3, // gauche
-	//	3, 7, 4,
-	//	4, 5, 1, // bas
-	//	1, 0, 4
-	//};
-
-	//GLfloat vertices[] = {
-	//	1.f, 1.f, 0.0f,  // Top Right
-	//	1.f, 0.5f, 0.0f,  // Bottom Right
-	//	0.5f, 0.5f, 0.0f,  // Bottom Left
-	//	0.5f, 1.f, 0.0f,   // Top Left
-	//	1.f, 0.0f, 0.0f,  
-	//	0.5f, 0.f, 0.0f,   
-	//};
-	//GLuint indices[] = {  // Note that we start from 0!
-	//	0, 1, 3,   // First Triangle
-	//	1, 2, 3,   // Second Triangle
-	//	1, 4, 2,
-	//	4, 5, 2
-	//};
 
 	GLfloat vertices[] = {
 		0.f, 0.f, 0.0f,
@@ -218,8 +179,8 @@ int main()
 		glm::mat4 model;
 		glm::mat4 view;
 		glm::mat4 projection;
-		model = glm::rotate(model, /*(GLfloat)glfwGetTime() **/ 1.0f, glm::vec3(0.5f, 0.0f, 0.0f));  
-		view = glm::translate(view, glm::vec3(0.0f, 0.0f, -6.0f));
+		model = glm::rotate(model, /*(GLfloat)glfwGetTime() **/ 2.0f, glm::vec3(0.5f, 0.0f, 0.0f));  
+		view = glm::translate(view, glm::vec3(-2.0f, 0.0f, -6.0f));
 		projection = glm::perspective(45.0f, (GLfloat)WIDTH / (GLfloat)HEIGHT, 0.1f, 100.0f);
 		// Get their uniform location
 		GLint modelLoc = glGetUniformLocation(basicShader.GetProgram(), "model");
@@ -255,5 +216,25 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 {
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, GL_TRUE);
+}
+
+double convertViewportToOpenGLCoordinate(double x)
+{
+	return (x * 2) - 1;
+}
+
+void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
+{
+	if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS){
+		double xpos, ypos;
+
+		glfwGetCursorPos(window, &xpos, &ypos);
+
+		double xPox, yPoy;
+		xPox = convertViewportToOpenGLCoordinate(xpos / (double)WIDTH);
+		yPoy = convertViewportToOpenGLCoordinate(ypos / (double)HEIGHT);
+
+		std::cout << xPox << " , " << yPoy << std::endl;
+	}
 }
 
