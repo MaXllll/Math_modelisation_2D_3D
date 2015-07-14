@@ -24,6 +24,7 @@
 
 // Function prototypes
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
+void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
 
 // Window dimensions
 const GLuint WIDTH = 1200, HEIGHT = 800;
@@ -231,6 +232,8 @@ int main()
 	// Set the required callback functions
 	glfwSetKeyCallback(window, key_callback);
 
+	glfwSetMouseButtonCallback(window, mouse_button_callback);
+
 	// Set this to true so GLEW knows to use a modern approach to retrieving function pointers and extensions
 	glewExperimental = GL_TRUE;
 	// Initialize GLEW to setup the OpenGL Function pointers
@@ -240,7 +243,6 @@ int main()
 	glViewport(0, 0, WIDTH, HEIGHT);
 
 	glEnable(GL_DEPTH_TEST);
-
 
 	basicShader.LoadVertexShader("basic.vs"); // vs or vert
 	basicShader.LoadFragmentShader("basic.fs");
@@ -432,3 +434,24 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, GL_TRUE);
 }
+
+double convertViewportToOpenGLCoordinate(double x)
+{
+	return (x * 2) - 1;
+}
+
+void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
+{
+	if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS){
+		double xpos, ypos;
+
+		glfwGetCursorPos(window, &xpos, &ypos);
+
+		double xPox, yPoy;
+		xPox = convertViewportToOpenGLCoordinate(xpos / (double)WIDTH);
+		yPoy = convertViewportToOpenGLCoordinate(ypos / (double)HEIGHT);
+
+		std::cout << xPox << " , " << yPoy << std::endl;
+	}
+}
+
