@@ -11,14 +11,19 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="customSlider.cpp" />
+    <ClCompile Include="customWidget_moc.cpp" />
     <ClCompile Include="EsgiShader.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="OpenGlWindow.cpp" />
     <ClCompile Include="Point.cpp" />
     <ClCompile Include="Widget.cpp" />
+    <ClCompile Include="Widget_moc.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="customSlider.h" />
     <ClInclude Include="ESGIShader.h" />
+    <ClInclude Include="Model.h" />
     <ClInclude Include="OpenGlWindow.h" />
     <ClInclude Include="Point.h" />
     <ClInclude Include="Widget.h" />

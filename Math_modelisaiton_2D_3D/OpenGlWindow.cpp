@@ -33,7 +33,12 @@ EsgiShader basicShader;
 
 GLuint VBO, VAO, VBO_spline, VAO_spline;
 
-void knot(int n, int c, int x[])
+OpenGlWindow::OpenGlWindow(Model* model)
+{
+	this->model = model;
+}
+
+void OpenGlWindow::knot(int n, int c, int x[])
 {
 	int nplusc, nplus2, i;
 
@@ -49,7 +54,7 @@ void knot(int n, int c, int x[])
 	}
 }
 
-void basis(int c, float t, int npts, int x[], float n[])
+void OpenGlWindow::basis(int c, float t, int npts, int x[], float n[])
 {
 	int nplusc;
 	int i, k;
@@ -103,7 +108,7 @@ void basis(int c, float t, int npts, int x[], float n[])
 	}
 }
 
-void bspline(int npts, int k, int p1)
+void OpenGlWindow::bspline(int npts, int k, int p1)
 {
 	int i, j, icount, jcount;
 	int i1;
@@ -172,6 +177,7 @@ void bspline(int npts, int k, int p1)
 				jcount = jcount + 3;
 			}
 			bsplineC.push_back(pointC);
+			//bsplineC.push_back(pointC);
 		}
 		/*
 		printf("icount, p %d %f %f %f \n",icount,p[icount+1],p[icount+2],p[icount+3]);
@@ -181,7 +187,7 @@ void bspline(int npts, int k, int p1)
 	}
 }
 
-void calculateBSpline()
+void OpenGlWindow::calculateBSpline()
 {
 	bsplineC.clear();
 
@@ -189,41 +195,42 @@ void calculateBSpline()
 	int npts, k, p1;
 
 	npts = controlPoints.size();
-	k = 4;     /* second order, change to 4 to get fourth order */
-	p1 = 150;   /* eleven points on curve */
+	k = model->degree;     /* second order, change to 4 to get fourth order */
+	p1 = model->pas;   /* eleven points on curve */
+	std::cout << model->pas << std::endl;
 
 	bspline(npts, k, p1);
 
 }
 
-void initializeGridBuffer() {
-	GLuint VBO, VAO, EBO;
-	glGenVertexArrays(1, &VAO);
-	glGenBuffers(1, &VBO);
-	glGenBuffers(1, &EBO);
-
-	glBindVertexArray(VAO);
-
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	//glBufferData(GL_ARRAY_BUFFER, vertices2.size() * sizeof(float), &vertices2.front(), GL_STATIC_DRAW);
-	//glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), &vertices, GL_STATIC_DRAW);
-
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-	//glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices2.size() * sizeof(float), &indices2.front(), GL_STATIC_DRAW);
-	//glBufferDakta(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), &indices, GL_STATIC_DRAW);
-
-	//glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	//glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), &vertices, GL_STATIC_DRAW);
-
-	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-	//glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), &indices, GL_STATIC_DRAW);
-
-	// Position attribute
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
-	glEnableVertexAttribArray(0);
-
-	glBindVertexArray(0); // Unbind VAO
-}
+//void initializeGridBuffer() {
+//	GLuint VBO, VAO, EBO;
+//	glGenVertexArrays(1, &VAO);
+//	glGenBuffers(1, &VBO);
+//	glGenBuffers(1, &EBO);
+//
+//	glBindVertexArray(VAO);
+//
+//	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+//	//glBufferData(GL_ARRAY_BUFFER, vertices2.size() * sizeof(float), &vertices2.front(), GL_STATIC_DRAW);
+//	//glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), &vertices, GL_STATIC_DRAW);
+//
+//	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+//	//glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices2.size() * sizeof(float), &indices2.front(), GL_STATIC_DRAW);
+//	//glBufferDakta(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), &indices, GL_STATIC_DRAW);
+//
+//	//glBindBuffer(GL_ARRAY_BUFFER, VBO);
+//	//glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), &vertices, GL_STATIC_DRAW);
+//
+//	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+//	//glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), &indices, GL_STATIC_DRAW);
+//
+//	// Position attribute
+//	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
+//	glEnableVertexAttribArray(0);
+//
+//	glBindVertexArray(0); // Unbind VAO
+//}
 
 void convertPointToFloat(){
 	controlP.clear();
@@ -302,23 +309,8 @@ void OpenGlWindow::initializeGL()
 		}
 	}
 
+	glEnable(GL_PROGRAM_POINT_SIZE);
 
-
-	//controlPoints.push_back(Point(0.0f, 0.0f, 0.0f));
-	//controlPoints.push_back(Point(0.0f, 0.8f, 0.0f));
-	//controlPoints.push_back(Point(0.8f, 0.0f, 0.0f));
-
-	GLfloat vertices[] = {
-		-0.5f, -0.5f, 0.0f, // Left  
-		0.5f, -0.5f, 0.0f, // Right 
-		0.0f, 0.5f, 0.0f,
-		0.0f, 1.f, 0.0f  // Top   // Top 
-	};
-	//glGenVertexArrays(1, &VAO);
-	//glGenBuffers(1, &VBO);
-
-	//glGenVertexArrays(1, &VAO_spline);
-	//glGenBuffers(1, &VBO_spline);
 }
 
 void OpenGlWindow::paintGL()
@@ -331,27 +323,20 @@ void OpenGlWindow::paintGL()
 
 	convertPointToFloat();
 
-	//if (controlP.size() > 3){
-	//	glBindVertexArray(VAO);
-
-	//	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	//	glBufferData(GL_ARRAY_BUFFER, controlP.size() * sizeof(float), &controlP.front(), GL_STATIC_DRAW);
-
-	//	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
-	//	glEnableVertexAttribArray(0);
-	//	calculateBSpline();
-	//}
-
-	GLfloat vertices[] = {
-		-0.5f, -0.5f, 0.0f, // Left  
-		0.5f, -0.5f, 0.0f, // Right 
-		0.0f, 0.5f, 0.0f  // Top   
-	};
-
-	std::cout << controlP.size() << std::endl;
-
-	if (controlP.size() >= 15)
+	if (controlP.size() > 3){
 		calculateBSpline();
+		controlP.erase(controlP.begin());
+		glGenVertexArrays(1, &VAO);
+		glGenBuffers(1, &VBO);
+		glBindVertexArray(VAO);
+
+		glBindBuffer(GL_ARRAY_BUFFER, VBO);
+		glBufferData(GL_ARRAY_BUFFER, controlP.size() * sizeof(float), &controlP.front(), GL_STATIC_DRAW);
+
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
+		glEnableVertexAttribArray(0);
+	}
+
 	if (bsplineC.size() > 0){
 		glGenVertexArrays(1, &VAO_spline);
 		glGenBuffers(1, &VBO_spline);
@@ -363,16 +348,6 @@ void OpenGlWindow::paintGL()
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
 		glEnableVertexAttribArray(0);
 	}
-	GLuint VBO, VAO;
-	glGenVertexArrays(1, &VAO);
-	glGenBuffers(1, &VBO);
-	glBindVertexArray(VAO);
-
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
-	glEnableVertexAttribArray(0);
 
 	// Create transformations
 	glm::mat4 model;
@@ -391,27 +366,17 @@ void OpenGlWindow::paintGL()
 	// Note: currently we set the projection matrix each frame, but since the projection matrix rarely changes it's often best practice to set it outside the main loop only once.
 	glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
 
-	// Draw container
-	//glBindVertexArray(VAO);
-	//glDrawElements(GL_TRIANGLE_STRIP, vertices2.size(), GL_UNSIGNED_INT, 0);
-	//glDrawElements(GL_TRIANGLE_STRIP, indices2.size(), GL_UNSIGNED_INT, 0);
-	//glDrawArrays(GL_TRIANGLES, 0, 36);
-	//glBindVertexArray(0);
+	if (controlP.size() > 0){
+		glBindVertexArray(VAO);
+		glDrawArrays(GL_POINTS, 0, controlP.size() / 3);
+		glBindVertexArray(0);
+	}
 
-	//glBindVertexArray(VAO);
-	//glDrawArrays(GL_POINTS, 0, controlP.size());
-	//glBindVertexArray(0);
-	glBindVertexArray(VAO_spline);
-	glDrawArrays(GL_LINE_STRIP, 0, bsplineC.size());
-	glBindVertexArray(0);
-
-	//glBindVertexArray(VAO);
-	//glDrawArrays(GL_TRIANGLES, 0, 3);
-	//glBindVertexArray(0);
-
-	// Swap the screen buffers
-	//glfwSwapBuffers(window);
-
+	if (bsplineC.size() > 0){
+		glBindVertexArray(VAO_spline);
+		glDrawArrays(GL_LINE_STRIP, 0, bsplineC.size() - this->model->pas * 2);
+		glBindVertexArray(0);
+	}
 
 }
 

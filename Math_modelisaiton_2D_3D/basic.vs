@@ -25,14 +25,12 @@ void main()
 	//Vertex lighting
 	//float intensity = dot(worldNormal, lightDirection);
 	//colorIntensity = color * intensity;
-	if(position.x == 0.0)
-		colorIntensity = vec4(1.0f, 1.0f, 1.f, 1.f);
-	else
 		colorIntensity = color;
 	normal = worldNormal;
 
     //gl_Position = projection * view * model * vec4(position, 1.0f);
 
     gl_Position = vec4(position, 1.0f);
+    gl_PointSize = 6;
     //TexCoord = vec2(texCoord.x, 1.0 - texCoord.y);
 }
