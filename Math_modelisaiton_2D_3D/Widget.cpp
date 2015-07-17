@@ -27,8 +27,8 @@ Widget::Widget()
 
 	//QSlider* m_slider = new QSlider(Qt::Horizontal, this);
 
-	lightPositionLayout->addWidget(dSlider = new customSlider(4, 1, 4, false, 10, "Degre"));
-	lightPositionLayout->addWidget(pSlider = new customSlider(100, 10, 1000, false, 40, "Pas"));
+	lightPositionLayout->addWidget(dSlider = new customSlider(4, 1, 4, false, 3, "Degre"));
+	lightPositionLayout->addWidget(pSlider = new customSlider(100, 10, 1000, false, 990, "Pas"));
 
 	connect(pSlider, SIGNAL(valueChanged(float)), this, SLOT(sliderValueChanged()));
 	connect(dSlider, SIGNAL(valueChanged(float)), this, SLOT(sliderValueChanged()));

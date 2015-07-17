@@ -22,7 +22,6 @@
 
 const GLuint GRID_W = 5, GRID_H = 5;
 
-const GLuint WIDTH = 1200, HEIGHT = 800;
 
 std::vector<Point> controlPoints = std::vector<Point>();
 std::vector<float> bsplineC = std::vector<float>();
@@ -36,6 +35,7 @@ GLuint VBO, VAO, VBO_spline, VAO_spline;
 OpenGlWindow::OpenGlWindow(Model* model)
 {
 	this->model = model;
+
 }
 
 void OpenGlWindow::knot(int n, int c, int x[])
@@ -59,7 +59,7 @@ void OpenGlWindow::basis(int c, float t, int npts, int x[], float n[])
 	int nplusc;
 	int i, k;
 	float d, e;
-	float temp[36];
+	float temp[1000];
 
 	nplusc = npts + c;
 
@@ -112,12 +112,12 @@ void OpenGlWindow::bspline(int npts, int k, int p1)
 {
 	int i, j, icount, jcount;
 	int i1;
-	int x[30];		/* allows for 20 data points with basis function of order 5 */
+	int x[100];		/* allows for 20 data points with basis function of order 5 */
 	int nplusc;
 
 	float step;
 	float t;
-	float nbasis[20];
+	float nbasis[100];
 	float temp;
 
 
@@ -251,7 +251,7 @@ void OpenGlWindow::initializeGL()
 	glewInit();
 
 	// Define the viewport dimensions
-	glViewport(0, 0, WIDTH, HEIGHT);
+	glViewport(0, 0, this->width(), this->height());
 
 	glEnable(GL_DEPTH_TEST);
 
@@ -355,7 +355,7 @@ void OpenGlWindow::paintGL()
 	glm::mat4 projection;
 	model = glm::rotate(model, /*(GLfloat)glfwGetTime() **/ 0.f, glm::vec3(0.5f, 0.0f, 0.0f));
 	view = glm::translate(view, glm::vec3(-1.0f, -1.0f, -5.0f));
-	projection = glm::perspective(45.0f, (GLfloat)WIDTH / (GLfloat)HEIGHT, 0.1f, 100.0f);
+	//projection = glm::perspective(45.0f, this->width / this->height, 0.1f, 100.0f);
 	// Get their uniform location
 	GLint modelLoc = glGetUniformLocation(basicShader.GetProgram(), "model");
 	GLint viewLoc = glGetUniformLocation(basicShader.GetProgram(), "view");
@@ -389,8 +389,8 @@ void OpenGlWindow::mousePressEvent(QMouseEvent * event)
 {
 	double xpos, ypos;
 	
-	xpos = convertViewportToOpenGLCoordinate(event->x() / (double)WIDTH);
-	ypos = -convertViewportToOpenGLCoordinate(event->y() / (double)HEIGHT);
+	xpos = convertViewportToOpenGLCoordinate(event->x() / (double)this->width());
+	ypos = -convertViewportToOpenGLCoordinate(event->y() / (double)this->height());
 	
 	controlPoints.push_back(Point(xpos, ypos, 0.f));
 	this->update();

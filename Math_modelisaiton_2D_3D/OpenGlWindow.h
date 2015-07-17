@@ -20,5 +20,6 @@ private:
 	void bspline(int npts, int k, int p1);
 	void calculateBSpline();
 
+
 };
 
