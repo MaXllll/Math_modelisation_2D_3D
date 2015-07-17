@@ -22,7 +22,8 @@ private:
 	void basis(int c, float t, int npts, int x[], float n[]);
 	void bspline(int npts, int k, int p1, int current);
 	void calculateBSpline(int i);
-	void searchClosedPoint(Point click);
+	Point* searchClosedPoint(Point click);
+	Point* searchClosedPointIt(Point click);
 
 	Point* movingPoint;
 	bool hasClick = false;

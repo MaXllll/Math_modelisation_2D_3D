@@ -30,6 +30,8 @@ public:
 	float x_;
 	float y_;
 	float z_;
+
+	bool operator==(const Point p) const;
     
 };
 

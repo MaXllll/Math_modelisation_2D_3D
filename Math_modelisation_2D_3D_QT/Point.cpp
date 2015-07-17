@@ -28,6 +28,19 @@ Point::Point(const Point &p)
 	this->z_ = p.z_;
 }
 
+bool Point::operator == (const Point p) const
+{
+	float diffX = abs(this->x_ - p.x_);
+	float diffY = abs(this->y_ - p.y_);
+
+	float tolerance = 0.001;
+
+	if (diffX < tolerance && diffY < tolerance)
+		return true;
+	else
+		return false;
+}
+
 
 std::ostream& operator<<(std::ostream& out, const Point &p)
 {

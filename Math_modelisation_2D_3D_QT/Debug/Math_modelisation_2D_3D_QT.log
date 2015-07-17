@@ -1,4 +1,4 @@
-﻿Build started 17/07/2015 17:14:36.
+﻿Build started 17/07/2015 18:19:16.
      1>Project "C:\Users\alexa_000\Documents\MaxL\Modelisation2D_3D\Math_modelisation_2D_3D_QT\Math_modelisation_2D_3D_QT.vcxproj" on node 2 (Build target(s)).
      1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.CppBuild.targets(935,5): warning MSB8027: Two or more files with the name of moc_customSlider.cpp will produce outputs to the same location. This can lead to an incorrect build result.  The files involved are GeneratedFiles\Debug\moc_customSlider.cpp, GeneratedFiles\Release\moc_customSlider.cpp.
      1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.CppBuild.targets(935,5): warning MSB8027: Two or more files with the name of moc_math_modelisation_2d_3d_qt.cpp will produce outputs to the same location. This can lead to an incorrect build result.  The files involved are GeneratedFiles\Debug\moc_math_modelisation_2d_3d_qt.cpp, GeneratedFiles\Release\moc_math_modelisation_2d_3d_qt.cpp.
@@ -23,4 +23,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:01.34
+Time Elapsed 00:00:01.25

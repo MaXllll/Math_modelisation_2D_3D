@@ -422,11 +422,40 @@ void OpenGlWindow::mousePressEvent(QMouseEvent * event)
 		hasClick = !hasClick;
 		if (hasClick)
 		{
-			searchClosedPoint(clickP);
+			movingPoint = searchClosedPoint(clickP);
+		}
+	}
+	else if (model->mode == model->REPEATPOINT)
+	{
+		if (event->button() == Qt::LeftButton)
+		{
+			Point* point = searchClosedPoint(clickP);
+			if (point != nullptr)
+			{
+				for (int i = 0; i < controlPoints.size(); i++){
+					std::vector<Point>::iterator it = std::find(controlPoints[i].begin(), controlPoints[i].end(), *point);
+					if (it != controlPoints[i].end()){
+						controlPoints[i].insert(it, *point);
+						this->update();
+						return;
+					}
+				}
+			}
 		}
 		else
 		{
-			
+			Point* point = searchClosedPoint(clickP);
+			if (point != nullptr)
+			{
+				for (int i = 0; i < controlPoints.size(); i++){
+					std::vector<Point>::iterator it = std::find(controlPoints[i].begin(), controlPoints[i].end(), *point);
+					if (it != controlPoints[i].end()){
+						controlPoints[i].erase(it);
+						this->update();
+						return;
+					}
+				}
+			}
 		}
 	}
 }
@@ -451,7 +480,7 @@ void OpenGlWindow::mouseMoveEvent(QMouseEvent *event)
 	}
 }
 
-void OpenGlWindow::searchClosedPoint(Point click)
+Point* OpenGlWindow::searchClosedPoint(Point click)
 {
 	for (int i = 0; i < controlPoints.size(); i++)
 	{
@@ -459,9 +488,10 @@ void OpenGlWindow::searchClosedPoint(Point click)
 		{
 			Point* currentPoint = &controlPoints[i][j];
 			if (click.isCloseTo(*currentPoint, 0.05)){
-				movingPoint = currentPoint;
-				return;
+				return currentPoint;
 			}
 		}
 	}
+
+	return nullptr;
 }
