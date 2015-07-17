@@ -29,19 +29,37 @@ void Math_modelisation_2D_3D_QT::newBSpline()
 
 void Math_modelisation_2D_3D_QT::createPointMode()
 {
-	model.mode = model.CREATEPOINT;
+	model.splineMode = model.CREATEPOINT;
 	mainWidget->repaint();
 }
 
 void Math_modelisation_2D_3D_QT::movePointMode()
 {
-	model.mode = model.MOVEPOINT;
+	model.splineMode = model.MOVEPOINT;
 	mainWidget->repaint();
 }
 
 void Math_modelisation_2D_3D_QT::repeatPointMode()
 {
-	model.mode = model.REPEATPOINT;
+	model.splineMode = model.REPEATPOINT;
+	mainWidget->repaint();
+}
+
+void Math_modelisation_2D_3D_QT::BSplineMode()
+{
+	model.mode = model.BSPLINE;
+	mainWidget->repaint();
+}
+
+void Math_modelisation_2D_3D_QT::ExtrusionMode()
+{
+	model.mode = model.EXTRUSION;
+	mainWidget->repaint();
+}
+
+void Math_modelisation_2D_3D_QT::BSurfaceMode()
+{
+	model.mode = model.BSURFACE;
 	mainWidget->repaint();
 }
 
@@ -56,6 +74,22 @@ void Math_modelisation_2D_3D_QT::createActions()
 
 	//Edit Menu
 	createPointAct = new QAction(tr("&Create Point"), this);
+
+	BSplineAct = new QAction(tr("&BSpline"), this);
+	//createPointAct->setShortcuts(QKeySequence::New);
+	BSplineAct->setStatusTip(tr("BSpline mode"));
+	connect(BSplineAct, SIGNAL(triggered()), this, SLOT(BSplineMode()));
+
+	ExtrusionAct = new QAction(tr("&Extrusion"), this);
+	//movePointAct->setShortcuts(QKeySequence::New);
+	ExtrusionAct->setStatusTip(tr("Extrusion mode"));
+	connect(ExtrusionAct, SIGNAL(triggered()), this, SLOT(ExtrusionMode()));
+
+	BSurfaceAct = new QAction(tr("&BSurface"), this);
+	//repeatPointAct->setShortcuts(QKeySequence::New);
+	BSurfaceAct->setStatusTip(tr("Bezier Surface Mode"));
+	connect(BSurfaceAct, SIGNAL(triggered()), this, SLOT(BSurfaceMode()));
+
 	//createPointAct->setShortcuts(QKeySequence::New);
 	createPointAct->setStatusTip(tr("Create new Point mode"));
 	connect(createPointAct, SIGNAL(triggered()), this, SLOT(createPointMode()));
@@ -77,10 +111,17 @@ void Math_modelisation_2D_3D_QT::createMenus()
 	fileMenu->addAction(newAct);
 
 	editMenu = menuBar()->addMenu(tr("&Edit"));
+
 	editModeMenu = editMenu->addMenu(tr("&Mode"));
+	editModeMenu->addAction(BSplineAct);
+	editModeMenu->addAction(ExtrusionAct);
+	editModeMenu->addAction(BSurfaceAct);
+
+	editModeMenu = editMenu->addMenu(tr("&Spline Mode"));
 	editModeMenu->addAction(createPointAct);
 	editModeMenu->addAction(movePointAct);
 	editModeMenu->addAction(repeatPointAct);
+
 
 	menuBar()->addSeparator();
 

@@ -21,18 +21,15 @@
 #include <QtWidgets\qapplication.h>
 #include <qdebug.h>
 
-const GLuint GRID_W = 5, GRID_H = 5;
-
-std::vector<std::vector<Point>> controlPoints = std::vector<std::vector<Point>>();
-std::vector<std::vector<float>> bsplineC = std::vector<std::vector<float>>();
-
-int currentSpline = -1;
-
-std::vector<std::vector<float>> controlP = std::vector<std::vector<float>>();
-
 EsgiShader basicShader;
 
-//GLuint VBO, VAO, VBO_spline, VAO_spline;
+
+OpenGlWindow::OpenGlWindow(Model* model)
+{
+	this->model = model;
+}
+
+#pragma region BSpline
 
 std::vector<GLuint> VAOsP = std::vector<GLuint>();
 std::vector<GLuint> VBOsP = std::vector<GLuint>();
@@ -40,10 +37,10 @@ std::vector<GLuint> VBOsP = std::vector<GLuint>();
 std::vector<GLuint> VAOsS = std::vector<GLuint>();
 std::vector<GLuint> VBOsS = std::vector<GLuint>();
 
-OpenGlWindow::OpenGlWindow(Model* model)
-{
-	this->model = model;
-}
+std::vector<std::vector<Point>> controlPoints = std::vector<std::vector<Point>>();
+std::vector<std::vector<float>> bsplineC = std::vector<std::vector<float>>();
+std::vector<std::vector<float>> controlP = std::vector<std::vector<float>>();
+int currentSpline = -1;
 
 void OpenGlWindow::knot(int n, int c, int x[])
 {
@@ -207,34 +204,18 @@ void OpenGlWindow::calculateBSpline(int i)
 	bspline(npts, k, p1, i);
 }
 
-//void initializeGridBuffer() {
-//	GLuint VBO, VAO, EBO;
-//	glGenVertexArrays(1, &VAO);
-//	glGenBuffers(1, &VBO);
-//	glGenBuffers(1, &EBO);
-//
-//	glBindVertexArray(VAO);
-//
-//	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-//	//glBufferData(GL_ARRAY_BUFFER, vertices2.size() * sizeof(float), &vertices2.front(), GL_STATIC_DRAW);
-//	//glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), &vertices, GL_STATIC_DRAW);
-//
-//	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-//	//glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices2.size() * sizeof(float), &indices2.front(), GL_STATIC_DRAW);
-//	//glBufferDakta(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), &indices, GL_STATIC_DRAW);
-//
-//	//glBindBuffer(GL_ARRAY_BUFFER, VBO);
-//	//glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), &vertices, GL_STATIC_DRAW);
-//
-//	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-//	//glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), &indices, GL_STATIC_DRAW);
-//
-//	// Position attribute
-//	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
-//	glEnableVertexAttribArray(0);
-//
-//	glBindVertexArray(0); // Unbind VAO
-//}
+void OpenGlWindow::initializeBSpline()
+{
+	newBSpline();
+
+	for (int i = 0; i < 100; i++)
+	{
+		VAOsP.push_back(GLuint());
+		VBOsP.push_back(GLuint());
+		VAOsS.push_back(GLuint());
+		VBOsS.push_back(GLuint());
+	}
+}
 
 void convertPointToFloat(int current){
 	controlP[current].clear();
@@ -247,113 +228,8 @@ void convertPointToFloat(int current){
 	}
 }
 
-void OpenGlWindow::initializeGL()
+void OpenGlWindow::paintBSpline()
 {
-	newBSpline();
-
-	for (int i = 0; i < 100; i++)
-	{
-		VAOsP.push_back(GLuint());
-		VBOsP.push_back(GLuint());
-		VAOsS.push_back(GLuint());
-		VBOsS.push_back(GLuint());
-	}
-
-	// Set this to true so GLEW knows to use a modern approach to retrieving function pointers and extensions
-	glewExperimental = GL_TRUE;
-	// Initialize GLEW to setup the OpenGL Function pointers
-	glewInit();
-
-	// Define the viewport dimensions
-	glViewport(0, 0, this->width(), this->height());
-
-	glEnable(GL_DEPTH_TEST);
-
-	basicShader.LoadVertexShader("basic.vs"); // vs or vert
-	basicShader.LoadFragmentShader("basic.fs");
-	basicShader.Create();
-
-	std::vector<GLfloat> vertices2 = std::vector<GLfloat>();
-	std::vector<GLuint> indices2 = std::vector<GLuint>();
-
-	float incrementW = 0.3f;
-	float incrementH = 0.3f;
-
-	//float increment = GRID_H >= GRID_W?
-
-	//float incrementW = 3.f / GRID_W;
-	//float incrementH = 3.f / GRID_W;
-
-	for (float i = 0.f; i <= GRID_W; i += 1.f)
-	{
-		for (float j = 0.f; j <= GRID_H; j += 1.f)
-		{
-			vertices2.push_back(j * incrementW);
-			vertices2.push_back(i * incrementH);
-			vertices2.push_back(0.f);
-		}
-	}
-
-	for (float i = 0.f; i < GRID_W; i += 1.f)
-	{
-		for (float j = 0.f; j < GRID_H; j += 1.f)
-		{
-			if (j == 0.f)
-			{
-				//x2 cause Degenerate triangle
-				indices2.push_back((GRID_H + 1) * i);
-				indices2.push_back((GRID_H + 1) * i);
-
-				indices2.push_back((GRID_H + 1) * (i + 1));
-				indices2.push_back((GRID_H + 1) * i + 1);
-			}
-			else
-			{
-				indices2.push_back((GRID_H + 1) * (i + 1) + j);
-				indices2.push_back((GRID_H + 1) * i + j + 1);
-
-			}
-			//End of the line
-			if (j == GRID_H - 1)
-			{
-				//x2 cause Degenerate triangle
-				indices2.push_back((GRID_H + 1) * (i + 1) + j + 1);
-				indices2.push_back((GRID_H + 1) * (i + 1) + j + 1);
-			}
-		}
-	}
-
-	glEnable(GL_PROGRAM_POINT_SIZE);
-
-	setMouseTracking(true);
-
-}
-
-void OpenGlWindow::paintGL()
-{
-	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	// Activate shader
-	basicShader.Bind();
-
-	// Create transformations
-	//glm::mat4 model;
-	//glm::mat4 view;
-	//glm::mat4 projection;
-	//model = glm::rotate(model, /*(GLfloat)glfwGetTime() **/ 0.f, glm::vec3(0.5f, 0.0f, 0.0f));
-	//view = glm::translate(view, glm::vec3(-1.0f, -1.0f, -5.0f));
-	//projection = glm::perspective(45.0f, (GLfloat)this->width() / (GLfloat)this->height(), 0.1f, 100.0f);
-	//// Get their uniform location
-	//GLint modelLoc = glGetUniformLocation(basicShader.GetProgram(), "model");
-	//GLint viewLoc = glGetUniformLocation(basicShader.GetProgram(), "view");
-	//GLint projLoc = glGetUniformLocation(basicShader.GetProgram(), "projection");
-	//// Pass them to the shaders
-	//glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-	//glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
-	//// Note: currently we set the projection matrix each frame, but since the projection matrix rarely changes it's often best practice to set it outside the main loop only once.
-	//glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
-
 	for (int i = 0; i < bsplineC.size(); i++){
 
 		convertPointToFloat(i);
@@ -397,9 +273,227 @@ void OpenGlWindow::paintGL()
 			glBindVertexArray(0);
 		}
 	}
+}
+
+void OpenGlWindow::newBSpline()
+{
+	currentSpline++;
+	controlP.push_back(std::vector<float>());
+	controlPoints.push_back(std::vector<Point>());
+	bsplineC.push_back(std::vector<float>());
+}
+#pragma endregion
+
+
+#pragma region BSurface
+const GLuint GRID_W = 5, GRID_H = 5;
+std::vector<GLfloat> verticesGrid = std::vector<GLfloat>();
+std::vector<GLuint> indicesGrid = std::vector<GLuint>();
+
+Point OpenGlWindow::Decasteljau(float t, std::vector<Point> points)
+{
+	//std::vector<Point> points = polygons[k].get_points();
+
+	std::vector<std::vector<Point>> arbre = std::vector<std::vector<Point>>();
+	arbre.push_back(points);
+	for (int i = 0; i < points.size() - 1; ++i)
+	{
+	std::vector<Point> nextLevel = std::vector <Point>();
+		for (int j = 0; j < arbre[i].size() - 1; ++j)
+		{
+			float x = (1.0 - t) * arbre[i][j].x_ + t * arbre[i][j + 1.0].x_;
+			float y = (1.0 - t) * arbre[i][j].y_ + t * arbre[i][j + 1.0].y_;
+			float z = (1.0 - t) * arbre[i][j].y_ + t * arbre[i][j + 1.0].y_;
+			Point a = Point(x, y, z);
+			nextLevel.push_back(a);
+		}
+		arbre.push_back(nextLevel);
+	}
+	return arbre[points.size() - 1][0];
+}
+
+std::vector<Point> OpenGlWindow::CalculateBezier(std::vector<Point> polygon)
+{
+	int pas = 30;
+	std::vector<Point> bezierR = std::vector<Point>();
+	if (polygon.size() >= 3)
+	{
+		bezierR.push_back(polygon[0]);
+		for (int k = 1; k <= pas; ++k)
+		{
+			Point a = Decasteljau((float)k / (float)pas, polygon);
+			bezierR.push_back(a);
+		}
+	}
+	return bezierR;
+}
+
+void OpenGlWindow::initializeGrid()
+{
+
+	float incrementW = 0.1f;
+	float incrementH = 0.1f;
+
+	//float increment = GRID_H >= GRID_W?
+
+	//float incrementW = 3.f / GRID_W;
+	//float incrementH = 3.f / GRID_W;
+
+	for (float i = 0.f; i <= GRID_W; i += 1.f)
+	{
+		for (float j = 0.f; j <= GRID_H; j += 1.f)
+		{
+			verticesGrid.push_back(j * incrementW);
+			verticesGrid.push_back(i * incrementH);
+			verticesGrid.push_back(0.f);
+		}
+	}
+
+	for (float i = 0.f; i < GRID_W; i += 1.f)
+	{
+		for (float j = 0.f; j < GRID_H; j += 1.f)
+		{
+			if (j == 0.f)
+			{
+				//x2 cause Degenerate triangle
+				indicesGrid.push_back((GRID_H + 1) * i);
+				indicesGrid.push_back((GRID_H + 1) * i);
+
+				indicesGrid.push_back((GRID_H + 1) * (i + 1));
+				indicesGrid.push_back((GRID_H + 1) * i + 1);
+			}
+			else
+			{
+				indicesGrid.push_back((GRID_H + 1) * (i + 1) + j);
+				indicesGrid.push_back((GRID_H + 1) * i + j + 1);
+
+			}
+			//End of the line
+			if (j == GRID_H - 1)
+			{
+				//x2 cause Degenerate triangle
+				indicesGrid.push_back((GRID_H + 1) * (i + 1) + j + 1);
+				indicesGrid.push_back((GRID_H + 1) * (i + 1) + j + 1);
+			}
+		}
+	}
 
 }
 
+void OpenGlWindow::paintBSurface()
+{
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+	GLuint VBO, VAO, EBO;
+	glGenVertexArrays(1, &VAO);
+	glGenBuffers(1, &VBO);
+	glGenBuffers(1, &EBO);
+
+	glBindVertexArray(VAO);
+
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferData(GL_ARRAY_BUFFER, verticesGrid.size() * sizeof(float), &verticesGrid.front(), GL_STATIC_DRAW);
+	//glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), &vertices, GL_STATIC_DRAW);
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indicesGrid.size() * sizeof(float), &indicesGrid.front(), GL_STATIC_DRAW);
+	//glBufferDakta(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), &indices, GL_STATIC_DRAW);
+
+	//glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	//glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), &vertices, GL_STATIC_DRAW);
+
+	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+	//glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), &indices, GL_STATIC_DRAW);
+
+	// Position attribute
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
+	glEnableVertexAttribArray(0);
+
+	glBindVertexArray(0); // Unbind VAO
+
+	glm::mat4 model;
+	glm::mat4 view;
+	glm::mat4 projection;
+	model = glm::rotate(model, /*(GLfloat)glfwGetTime() **/ 0.f, glm::vec3(0.0f, 0.0f, 0.0f));
+	view = glm::translate(view, glm::vec3(0.0f, 0.0f, -5.0f));
+	projection = glm::perspective(45.0f, (GLfloat)this->width() / (GLfloat)this->height(), 0.1f, 100.0f);
+	// Get their uniform location
+	GLint modelLoc = glGetUniformLocation(basicShader.GetProgram(), "model");
+	GLint viewLoc = glGetUniformLocation(basicShader.GetProgram(), "view");
+	GLint projLoc = glGetUniformLocation(basicShader.GetProgram(), "projection");
+	// Pass them to the shaders
+	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
+	// Note: currently we set the projection matrix each frame, but since the projection matrix rarely changes it's often best practice to set it outside the main loop only once.
+	glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
+
+	glBindVertexArray(VAO);
+	glDrawElements(GL_TRIANGLE_STRIP, indicesGrid.size(), GL_UNSIGNED_INT, 0);
+	glBindVertexArray(0);
+
+}
+#pragma endregion
+
+void OpenGlWindow::initializeGL()
+{
+	if (model->mode == model->BSPLINE)
+	{
+		initializeBSpline();
+	}
+	else if (model->mode == model->EXTRUSION)
+	{
+
+	}
+	else if (model->mode == model->BSURFACE)
+	{
+		
+	}
+
+	// Set this to true so GLEW knows to use a modern approach to retrieving function pointers and extensions
+	glewExperimental = GL_TRUE;
+	// Initialize GLEW to setup the OpenGL Function pointers
+	glewInit();
+
+	// Define the viewport dimensions
+	glViewport(0, 0, this->width(), this->height());
+
+	glEnable(GL_DEPTH_TEST);
+
+	basicShader.LoadVertexShader("basic.vs"); // vs or vert
+	basicShader.LoadFragmentShader("basic.fs");
+	basicShader.Create();
+
+	glEnable(GL_PROGRAM_POINT_SIZE);
+
+	setMouseTracking(true);
+
+}
+
+void OpenGlWindow::paintGL()
+{
+	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	// Activate shader
+	basicShader.Bind();
+
+	if (model->mode == model->BSPLINE)
+	{
+		paintBSpline();
+	}
+	else if (model->mode == model->EXTRUSION)
+	{
+
+	}
+	else if (model->mode == model->BSURFACE)
+	{
+		initializeGrid();
+		paintBSurface();
+	}
+
+}
+
+#pragma region Utils
 double convertViewportToOpenGLCoordinate(double x)
 {
 	return (x * 2) - 1;
@@ -412,12 +506,12 @@ void OpenGlWindow::mousePressEvent(QMouseEvent * event)
 	clickP.y_ = -convertViewportToOpenGLCoordinate(event->y() / (double)this->height());
 	clickP.z_ = 0.0f;
 
-	if (model->mode == model->CREATEPOINT)
+	if (model->splineMode == model->CREATEPOINT)
 	{
 		controlPoints[currentSpline].push_back(clickP);
 		this->update();
 	}
-	else if (model->mode == model->MOVEPOINT)
+	else if (model->splineMode == model->MOVEPOINT)
 	{
 		hasClick = !hasClick;
 		if (hasClick)
@@ -425,7 +519,7 @@ void OpenGlWindow::mousePressEvent(QMouseEvent * event)
 			movingPoint = searchClosedPoint(clickP);
 		}
 	}
-	else if (model->mode == model->REPEATPOINT)
+	else if (model->splineMode == model->REPEATPOINT)
 	{
 		if (event->button() == Qt::LeftButton)
 		{
@@ -460,22 +554,13 @@ void OpenGlWindow::mousePressEvent(QMouseEvent * event)
 	}
 }
 
-void OpenGlWindow::newBSpline()
-{
-	currentSpline++;
-	controlP.push_back(std::vector<float>());
-	controlPoints.push_back(std::vector<Point>());
-	bsplineC.push_back(std::vector<float>());
-}
-
 void OpenGlWindow::mouseMoveEvent(QMouseEvent *event)
 {
-	if (model->mode == model->MOVEPOINT && hasClick)
+	if (model->splineMode == model->MOVEPOINT && hasClick)
 	{
 		movingPoint->x_ = convertViewportToOpenGLCoordinate(event->x() / (double)this->width());
 		movingPoint->y_ = -convertViewportToOpenGLCoordinate(event->y() / (double)this->height());
 		movingPoint->z_ = 0.0f;
-		qDebug() << movingPoint->x_ << " " << movingPoint->y_;
 		this->update();
 	}
 }
@@ -495,3 +580,4 @@ Point* OpenGlWindow::searchClosedPoint(Point click)
 
 	return nullptr;
 }
+#pragma endregion

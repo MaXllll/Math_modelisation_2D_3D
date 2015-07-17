@@ -18,6 +18,10 @@ private slots:
 	void movePointMode();
 	void repeatPointMode();
 
+	void BSplineMode();
+	void ExtrusionMode();
+	void BSurfaceMode();
+
 private:
 	void createActions();
 	void createMenus();
@@ -31,6 +35,10 @@ private:
 	QAction *createPointAct;
 	QAction *movePointAct;
 	QAction *repeatPointAct;
+
+	QAction *BSplineAct;
+	QAction *ExtrusionAct;
+	QAction *BSurfaceAct;
 
 private:
 	Ui::Math_modelisation_2D_3D_QTClass ui;
