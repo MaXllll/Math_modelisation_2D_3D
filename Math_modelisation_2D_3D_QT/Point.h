@@ -25,6 +25,7 @@ public:
     
     void add(const Point &p);
     void scale(float scale);
+	bool isCloseTo(Point p, float tolerance);
 
 	float x_;
 	float y_;

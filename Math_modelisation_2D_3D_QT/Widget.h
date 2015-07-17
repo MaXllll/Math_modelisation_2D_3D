@@ -10,7 +10,7 @@ class Widget : public QWidget
 	customSlider* dSlider;
 	customSlider* pSlider;
 
-	Model model;
+	Model* model;
 
 private slots:
 	void sliderValueChanged();
@@ -19,7 +19,8 @@ private slots:
 //	void valueChanged(float newValue);
 
 public:
-	Widget();
+	Widget(Model* model);
 	void newbSpline();
+	void repaint();
 };
 

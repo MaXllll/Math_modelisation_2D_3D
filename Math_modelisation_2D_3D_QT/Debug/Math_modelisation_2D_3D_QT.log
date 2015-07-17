@@ -1,31 +1,11 @@
-﻿Build started 17/07/2015 15:46:26.
+﻿Build started 17/07/2015 17:14:36.
      1>Project "C:\Users\alexa_000\Documents\MaxL\Modelisation2D_3D\Math_modelisation_2D_3D_QT\Math_modelisation_2D_3D_QT.vcxproj" on node 2 (Build target(s)).
-     1>CustomBuild:
-         Moc'ing math_modelisation_2d_3d_qt.h...
-         Uic'ing math_modelisation_2d_3d_qt.ui...
-         Moc'ing Widget.h...
-         Moc'ing customSlider.h...
-         Rcc'ing math_modelisation_2d_3d_qt.qrc...
-     1>RCC : warning : No resources in 'C:\Users\alexa_000\Documents\MaxL\Modelisation2D_3D\Math_modelisation_2D_3D_QT\math_modelisation_2d_3d_qt.qrc'.
-         
      1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.CppBuild.targets(935,5): warning MSB8027: Two or more files with the name of moc_customSlider.cpp will produce outputs to the same location. This can lead to an incorrect build result.  The files involved are GeneratedFiles\Debug\moc_customSlider.cpp, GeneratedFiles\Release\moc_customSlider.cpp.
      1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.CppBuild.targets(935,5): warning MSB8027: Two or more files with the name of moc_math_modelisation_2d_3d_qt.cpp will produce outputs to the same location. This can lead to an incorrect build result.  The files involved are GeneratedFiles\Debug\moc_math_modelisation_2d_3d_qt.cpp, GeneratedFiles\Release\moc_math_modelisation_2d_3d_qt.cpp.
      1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.CppBuild.targets(935,5): warning MSB8027: Two or more files with the name of moc_Widget.cpp will produce outputs to the same location. This can lead to an incorrect build result.  The files involved are GeneratedFiles\Debug\moc_Widget.cpp, GeneratedFiles\Release\moc_Widget.cpp.
-       ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I.\GeneratedFiles /I. /IC:\Qt\5.5\msvc2013\include /I.\GeneratedFiles\Debug /IC:\Qt\5.5\msvc2013\include\QtCore /IC:\Qt\5.5\msvc2013\include\QtGui /IC:\Qt\5.5\msvc2013\include\QtOpenGL /IC:\Qt\5.5\msvc2013\include\QtWidgets /I"..\Libs\glfw-3.1.1.bin.WIN32\include" /I..\Libs\SOIL\src /I..\Libs\glm /Zi /nologo /W1 /WX- /Od /Oy- /D UNICODE /D WIN32 /D WIN64 /D QT_DLL /D QT_CORE_LIB /D QT_GUI_LIB /D QT_OPENGL_LIB /D QT_WIDGETS_LIB /Gm- /EHsc /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt customSlider.cpp EsgiShader.cpp GeneratedFiles\Debug\moc_customSlider.cpp GeneratedFiles\Debug\moc_math_modelisation_2d_3d_qt.cpp GeneratedFiles\Debug\moc_Widget.cpp main.cpp math_modelisation_2d_3d_qt.cpp OpenGlWindow.cpp Point.cpp Widget.cpp
-         customSlider.cpp
-         EsgiShader.cpp
-         moc_customSlider.cpp
-         moc_math_modelisation_2d_3d_qt.cpp
-         moc_Widget.cpp
-         main.cpp
-         math_modelisation_2d_3d_qt.cpp
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I.\GeneratedFiles /I. /IC:\Qt\5.5\msvc2013\include /I.\GeneratedFiles\Debug /IC:\Qt\5.5\msvc2013\include\QtCore /IC:\Qt\5.5\msvc2013\include\QtGui /IC:\Qt\5.5\msvc2013\include\QtOpenGL /IC:\Qt\5.5\msvc2013\include\QtWidgets /I"..\Libs\glfw-3.1.1.bin.WIN32\include" /I..\Libs\SOIL\src /I..\Libs\glm /Zi /nologo /W1 /WX- /Od /Oy- /D UNICODE /D WIN32 /D WIN64 /D QT_DLL /D QT_CORE_LIB /D QT_GUI_LIB /D QT_OPENGL_LIB /D QT_WIDGETS_LIB /Gm- /EHsc /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt OpenGlWindow.cpp
          OpenGlWindow.cpp
-         Point.cpp
-         Widget.cpp
-         Generating Code...
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I.\GeneratedFiles /I. /IC:\Qt\5.5\msvc2013\include /I.\GeneratedFiles\Debug /IC:\Qt\5.5\msvc2013\include\QtCore /IC:\Qt\5.5\msvc2013\include\QtGui /IC:\Qt\5.5\msvc2013\include\QtOpenGL /IC:\Qt\5.5\msvc2013\include\QtWidgets /I"..\Libs\glfw-3.1.1.bin.WIN32\include" /I..\Libs\SOIL\src /I..\Libs\glm /Zi /nologo /W1 /WX- /Od /Oy- /D UNICODE /D WIN32 /D WIN64 /D QT_DLL /D QT_CORE_LIB /D QT_GUI_LIB /D QT_OPENGL_LIB /D QT_WIDGETS_LIB /Gm- /EHsc /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt GeneratedFiles\qrc_math_modelisation_2d_3d_qt.cpp
-         qrc_math_modelisation_2d_3d_qt.cpp
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\alexa_000\Documents\MaxL\Modelisation2D_3D\Win32\Debug\\Math_modelisation_2D_3D_QT.exe" /NOLOGO /LIBPATH:C:\Qt\5.5\msvc2013\lib /LIBPATH:"..\Libs\glew-1.12.0\bin\Release\Win32" /LIBPATH:..\Libs\SOIL\LIB qtmaind.lib Qt5Cored.lib Qt5Guid.lib Qt5OpenGLd.lib opengl32.lib glu32.lib Qt5Widgetsd.lib glew32s.lib SOIL.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\alexa_000\Documents\MaxL\Modelisation2D_3D\Win32\Debug\Math_modelisation_2D_3D_QT.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\alexa_000\Documents\MaxL\Modelisation2D_3D\Win32\Debug\Math_modelisation_2D_3D_QT.lib" /MACHINE:X86 /SAFESEH Debug\customSlider.obj
          Debug\EsgiShader.obj
@@ -38,26 +18,9 @@
          Debug\OpenGlWindow.obj
          Debug\Point.obj
          Debug\Widget.obj
-     1>LINK : warning LNK4098: defaultlib 'LIBCMT' conflicts with use of other libs; use /NODEFAULTLIB:library
-     1>EsgiShader.obj : warning LNK4049: locally defined symbol ___glewAttachShader imported
-     1>EsgiShader.obj : warning LNK4049: locally defined symbol ___glewCompileShader imported
-     1>EsgiShader.obj : warning LNK4049: locally defined symbol ___glewCreateProgram imported
-     1>EsgiShader.obj : warning LNK4049: locally defined symbol ___glewCreateShader imported
-     1>EsgiShader.obj : warning LNK4049: locally defined symbol ___glewDeleteProgram imported
-     1>EsgiShader.obj : warning LNK4049: locally defined symbol ___glewDeleteShader imported
-     1>EsgiShader.obj : warning LNK4049: locally defined symbol ___glewDetachShader imported
-     1>EsgiShader.obj : warning LNK4049: locally defined symbol ___glewGetProgramInfoLog imported
-     1>EsgiShader.obj : warning LNK4049: locally defined symbol ___glewGetProgramiv imported
-     1>EsgiShader.obj : warning LNK4049: locally defined symbol ___glewGetShaderInfoLog imported
-     1>EsgiShader.obj : warning LNK4049: locally defined symbol ___glewGetShaderiv imported
-     1>EsgiShader.obj : warning LNK4049: locally defined symbol ___glewLinkProgram imported
-     1>EsgiShader.obj : warning LNK4049: locally defined symbol ___glewShaderSource imported
-     1>EsgiShader.obj : warning LNK4049: locally defined symbol ___glewUseProgram imported
-     1>EsgiShader.obj : warning LNK4049: locally defined symbol ___glewValidateProgram imported
-     1>glew32s.lib(glew.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'glew32s.lib(glew.obj)' or at 'C:\Users\alexa_000\Documents\MaxL\Modelisation2D_3D\Win32\Debug\vc120.pdb'; linking object as if no debug info
          Math_modelisation_2D_3D_QT.vcxproj -> C:\Users\alexa_000\Documents\MaxL\Modelisation2D_3D\Win32\Debug\Math_modelisation_2D_3D_QT.exe
      1>Done Building Project "C:\Users\alexa_000\Documents\MaxL\Modelisation2D_3D\Math_modelisation_2D_3D_QT\Math_modelisation_2D_3D_QT.vcxproj" (Build target(s)).
 
 Build succeeded.
 
-Time Elapsed 00:00:06.42
+Time Elapsed 00:00:01.34

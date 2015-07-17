@@ -19,6 +19,7 @@
 
 //Qt
 #include <QtWidgets\qapplication.h>
+#include <qdebug.h>
 
 const GLuint GRID_W = 5, GRID_H = 5;
 
@@ -324,6 +325,8 @@ void OpenGlWindow::initializeGL()
 
 	glEnable(GL_PROGRAM_POINT_SIZE);
 
+	setMouseTracking(true);
+
 }
 
 void OpenGlWindow::paintGL()
@@ -404,13 +407,28 @@ double convertViewportToOpenGLCoordinate(double x)
 
 void OpenGlWindow::mousePressEvent(QMouseEvent * event)
 {
-	double xpos, ypos;
+	Point clickP = Point();
+	clickP.x_ = convertViewportToOpenGLCoordinate(event->x() / (double)this->width());
+	clickP.y_ = -convertViewportToOpenGLCoordinate(event->y() / (double)this->height());
+	clickP.z_ = 0.0f;
 
-	xpos = convertViewportToOpenGLCoordinate(event->x() / (double)this->width());
-	ypos = -convertViewportToOpenGLCoordinate(event->y() / (double)this->height());
-
-	controlPoints[currentSpline].push_back(Point(xpos, ypos, 0.f));
-	this->update();
+	if (model->mode == model->CREATEPOINT)
+	{
+		controlPoints[currentSpline].push_back(clickP);
+		this->update();
+	}
+	else if (model->mode == model->MOVEPOINT)
+	{
+		hasClick = !hasClick;
+		if (hasClick)
+		{
+			searchClosedPoint(clickP);
+		}
+		else
+		{
+			
+		}
+	}
 }
 
 void OpenGlWindow::newBSpline()
@@ -419,4 +437,31 @@ void OpenGlWindow::newBSpline()
 	controlP.push_back(std::vector<float>());
 	controlPoints.push_back(std::vector<Point>());
 	bsplineC.push_back(std::vector<float>());
+}
+
+void OpenGlWindow::mouseMoveEvent(QMouseEvent *event)
+{
+	if (model->mode == model->MOVEPOINT && hasClick)
+	{
+		movingPoint->x_ = convertViewportToOpenGLCoordinate(event->x() / (double)this->width());
+		movingPoint->y_ = -convertViewportToOpenGLCoordinate(event->y() / (double)this->height());
+		movingPoint->z_ = 0.0f;
+		qDebug() << movingPoint->x_ << " " << movingPoint->y_;
+		this->update();
+	}
+}
+
+void OpenGlWindow::searchClosedPoint(Point click)
+{
+	for (int i = 0; i < controlPoints.size(); i++)
+	{
+		for (int j = 0; j < controlPoints[i].size(); j++)
+		{
+			Point* currentPoint = &controlPoints[i][j];
+			if (click.isCloseTo(*currentPoint, 0.05)){
+				movingPoint = currentPoint;
+				return;
+			}
+		}
+	}
 }

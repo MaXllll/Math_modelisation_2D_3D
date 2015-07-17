@@ -13,7 +13,10 @@ public:
 	~Math_modelisation_2D_3D_QT();
 
 private slots:
-	void newFile();
+	void newBSpline();
+	void createPointMode();
+	void movePointMode();
+	void repeatPointMode();
 
 private:
 	void createActions();
@@ -22,19 +25,12 @@ private:
 
 	QMenu *fileMenu;
 	QMenu *editMenu;
+	QMenu *editModeMenu;
 	QMenu *helpMenu;
-	QToolBar *fileToolBar;
-	QToolBar *editToolBar;
 	QAction *newAct;
-	QAction *openAct;
-	QAction *saveAct;
-	QAction *saveAsAct;
-	QAction *exitAct;
-	QAction *cutAct;
-	QAction *copyAct;
-	QAction *pasteAct;
-	QAction *aboutAct;
-	QAction *aboutQtAct;
+	QAction *createPointAct;
+	QAction *movePointAct;
+	QAction *repeatPointAct;
 
 private:
 	Ui::Math_modelisation_2D_3D_QTClass ui;

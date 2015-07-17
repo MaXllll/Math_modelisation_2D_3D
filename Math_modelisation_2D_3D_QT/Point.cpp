@@ -6,6 +6,7 @@
 //  Copyright (c) 2014 Maxime Lahaye. All rights reserved.
 //
 #include "Point.h"
+#include <math.h>
 
 Point::Point()
 {
@@ -37,4 +38,15 @@ std::ostream& operator<<(std::ostream& out, const Point &p)
 Point::~Point(void)
 {
     
+}
+
+bool Point::isCloseTo(Point p, float tolerance)
+{
+	float diffX = abs(this->x_ - p.x_);
+	float diffY = abs(this->y_ - p.y_);
+
+	if (diffX < tolerance && diffY < tolerance)
+		return true;
+	else
+		return false;
 }

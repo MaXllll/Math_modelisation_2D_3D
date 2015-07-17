@@ -9,18 +9,19 @@ OpenGlWindow* glWindow;
 // Window dimensions
 const GLuint WIDTH = 1200, HEIGHT = 800;
 
-Widget::Widget()
+Widget::Widget(Model* modelP)
 {
+	this->model = modelP;
 	setMinimumSize(WIDTH, HEIGHT);
-	model.degree = 4;
-	model.pas = 100;
+	model->degree = 4;
+	model->pas = 100;
 
 	QVBoxLayout* mainLayout;
 	setLayout(mainLayout = new QVBoxLayout);
 	
 	QVBoxLayout* controlsayout;
 	mainLayout->addLayout(controlsayout = new QVBoxLayout);
-	mainLayout->addWidget(glWindow = new OpenGlWindow(&model));
+	mainLayout->addWidget(glWindow = new OpenGlWindow(model));
 
 	QHBoxLayout* lightPositionLayout;
 	controlsayout->addLayout(lightPositionLayout = new QHBoxLayout);
@@ -37,12 +38,17 @@ Widget::Widget()
 
 void Widget::sliderValueChanged()
 {
-	model.degree = dSlider->value();
-	model.pas = pSlider->value();
+	model->degree = dSlider->value();
+	model->pas = pSlider->value();
 	glWindow->repaint();
 }
 
 void Widget::newbSpline()
 {
 	glWindow->newBSpline();
+}
+
+void Widget::repaint()
+{
+	glWindow->repaint();
 }
