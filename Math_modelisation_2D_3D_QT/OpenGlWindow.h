@@ -21,6 +21,5 @@ private:
 	void bspline(int npts, int k, int p1, int current);
 	void calculateBSpline(int i);
 
-
 };
 

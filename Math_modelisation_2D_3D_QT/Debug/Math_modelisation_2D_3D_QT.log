@@ -1,4 +1,4 @@
-﻿Build started 17/07/2015 15:34:22.
+﻿Build started 17/07/2015 15:46:26.
      1>Project "C:\Users\alexa_000\Documents\MaxL\Modelisation2D_3D\Math_modelisation_2D_3D_QT\Math_modelisation_2D_3D_QT.vcxproj" on node 2 (Build target(s)).
      1>CustomBuild:
          Moc'ing math_modelisation_2d_3d_qt.h...
@@ -60,4 +60,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:07.19
+Time Elapsed 00:00:06.42

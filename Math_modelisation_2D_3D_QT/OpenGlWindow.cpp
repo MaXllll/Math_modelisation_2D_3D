@@ -22,11 +22,8 @@
 
 const GLuint GRID_W = 5, GRID_H = 5;
 
-<<<<<<< HEAD:Math_modelisation_2D_3D_QT/OpenGlWindow.cpp
 std::vector<std::vector<Point>> controlPoints = std::vector<std::vector<Point>>();
 std::vector<std::vector<float>> bsplineC = std::vector<std::vector<float>>();
-=======
->>>>>>> 653bb0d06505bb4dbf185ab1d77caa1a61dd5f8d:Math_modelisaiton_2D_3D/OpenGlWindow.cpp
 
 int currentSpline = -1;
 
@@ -45,7 +42,6 @@ std::vector<GLuint> VBOsS = std::vector<GLuint>();
 OpenGlWindow::OpenGlWindow(Model* model)
 {
 	this->model = model;
-
 }
 
 void OpenGlWindow::knot(int n, int c, int x[])
@@ -122,20 +118,12 @@ void OpenGlWindow::bspline(int npts, int k, int p1, int current)
 {
 	int i, j, icount, jcount;
 	int i1;
-<<<<<<< HEAD:Math_modelisation_2D_3D_QT/OpenGlWindow.cpp
 	int x[1000];		/* allows for 20 data points with basis function of order 5 */
-=======
-	int x[100];		/* allows for 20 data points with basis function of order 5 */
->>>>>>> 653bb0d06505bb4dbf185ab1d77caa1a61dd5f8d:Math_modelisaiton_2D_3D/OpenGlWindow.cpp
 	int nplusc;
 
 	float step;
 	float t;
-<<<<<<< HEAD:Math_modelisation_2D_3D_QT/OpenGlWindow.cpp
 	float nbasis[1000];
-=======
-	float nbasis[100];
->>>>>>> 653bb0d06505bb4dbf185ab1d77caa1a61dd5f8d:Math_modelisaiton_2D_3D/OpenGlWindow.cpp
 	float temp;
 
 
@@ -394,36 +382,11 @@ void OpenGlWindow::paintGL()
 		}
 
 
-<<<<<<< HEAD:Math_modelisation_2D_3D_QT/OpenGlWindow.cpp
 		if (controlP[i].size() > 0){
 			glBindVertexArray(VAOsP[i]);
 			glDrawArrays(GL_POINTS, 0, controlP[i].size() / 3);
 			glBindVertexArray(0);
 		}
-=======
-	// Create transformations
-	glm::mat4 model;
-	glm::mat4 view;
-	glm::mat4 projection;
-	model = glm::rotate(model, /*(GLfloat)glfwGetTime() **/ 0.f, glm::vec3(0.5f, 0.0f, 0.0f));
-	view = glm::translate(view, glm::vec3(-1.0f, -1.0f, -5.0f));
-	//projection = glm::perspective(45.0f, this->width / this->height, 0.1f, 100.0f);
-	// Get their uniform location
-	GLint modelLoc = glGetUniformLocation(basicShader.GetProgram(), "model");
-	GLint viewLoc = glGetUniformLocation(basicShader.GetProgram(), "view");
-	GLint projLoc = glGetUniformLocation(basicShader.GetProgram(), "projection");
-	// Pass them to the shaders
-	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
-	// Note: currently we set the projection matrix each frame, but since the projection matrix rarely changes it's often best practice to set it outside the main loop only once.
-	glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
-
-	if (controlP.size() > 0){
-		glBindVertexArray(VAO);
-		glDrawArrays(GL_POINTS, 0, controlP.size() / 3);
-		glBindVertexArray(0);
-	}
->>>>>>> 653bb0d06505bb4dbf185ab1d77caa1a61dd5f8d:Math_modelisaiton_2D_3D/OpenGlWindow.cpp
 
 		if (bsplineC[i].size() > 0){
 			glBindVertexArray(VAOsS[i]);
@@ -442,19 +405,11 @@ double convertViewportToOpenGLCoordinate(double x)
 void OpenGlWindow::mousePressEvent(QMouseEvent * event)
 {
 	double xpos, ypos;
-<<<<<<< HEAD:Math_modelisation_2D_3D_QT/OpenGlWindow.cpp
 
 	xpos = convertViewportToOpenGLCoordinate(event->x() / (double)this->width());
 	ypos = -convertViewportToOpenGLCoordinate(event->y() / (double)this->height());
 
 	controlPoints[currentSpline].push_back(Point(xpos, ypos, 0.f));
-=======
-	
-	xpos = convertViewportToOpenGLCoordinate(event->x() / (double)this->width());
-	ypos = -convertViewportToOpenGLCoordinate(event->y() / (double)this->height());
-	
-	controlPoints.push_back(Point(xpos, ypos, 0.f));
->>>>>>> 653bb0d06505bb4dbf185ab1d77caa1a61dd5f8d:Math_modelisaiton_2D_3D/OpenGlWindow.cpp
 	this->update();
 }
 
