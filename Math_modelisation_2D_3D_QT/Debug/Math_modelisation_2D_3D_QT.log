@@ -1,4 +1,4 @@
-﻿Build started 7/18/2015 10:42:31 PM.
+﻿Build started 7/19/2015 12:22:12 AM.
      1>Project "C:\Users\Maxime\Documents\ESGI_4A\Math\Math_modelisation_2D_3D\Math_modelisation_2D_3D_QT\Math_modelisation_2D_3D_QT.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I.\GeneratedFiles /I. /I"C:\Program Files\Qt\5.5\msvc2012\include" /I.\GeneratedFiles\Debug /I"C:\Program Files\Qt\5.5\msvc2012\include\QtCore" /I"C:\Program Files\Qt\5.5\msvc2012\include\QtGui" /I"C:\Program Files\Qt\5.5\msvc2012\include\QtOpenGL" /I"C:\Program Files\Qt\5.5\msvc2012\include\QtWidgets" /I"..\Libs\glfw-3.1.1.bin.WIN32\include" /I..\Libs\SOIL\src /I..\Libs\glm /I..\Libs\Qt\Include /Zi /nologo /W1 /WX- /Od /Oy- /D UNICODE /D WIN32 /D WIN64 /D QT_DLL /D QT_CORE_LIB /D QT_GUI_LIB /D QT_OPENGL_LIB /D QT_WIDGETS_LIB /Gm- /EHsc /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt OpenGlWindow.cpp

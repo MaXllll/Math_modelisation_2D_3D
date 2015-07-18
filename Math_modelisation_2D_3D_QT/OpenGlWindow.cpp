@@ -16,10 +16,13 @@
 
 #include <vector>
 #include "Point.h"
+#include <math.h>
 
 //Qt
 #include <QtWidgets\qapplication.h>
 #include <qdebug.h>
+
+#define PI 3.14159265
 
 EsgiShader basicShader;
 EsgiShader basicShader2;
@@ -578,7 +581,7 @@ void OpenGlWindow::paintGrid()
 std::vector<GLfloat> extrusion = std::vector<GLfloat>();
 std::vector<GLuint> indexExtrusion = std::vector<GLuint>();
 
-void OpenGlWindow::calculateExtrusion()
+void OpenGlWindow::calculateSimpleExtrusion()
 {
 	extrusion.clear();
 	indexExtrusion.clear();
@@ -614,13 +617,58 @@ void OpenGlWindow::calculateExtrusion()
 	}
 }
 
+void OpenGlWindow::calculateRotationExtrusion()
+{
+
+
+	double cosX, sinY;
+
+	for (int i = 0; i < 3; i+= 1){
+
+		cosX = cos(i + 1 * PI / 180.0);
+		sinY = sin(i + 1 * PI / 180.0);
+		//std::cout << result << std::endl;
+		for (int j = 0; j < bsplineC[0].size(); j += 3)
+		{
+			
+			extrusion.push_back((bsplineC[0][j] + 0.6f) * cosX);
+			extrusion.push_back(sinY);
+			extrusion.push_back(bsplineC[0][j + 1] + 0.7f);
+		}
+	}
+	//std::cout << std::endl << std::endl;
+
+	int grid_w = bsplineC[0].size();
+	int grid_h = 360;
+
+	for (float i = 0.f; i < grid_h - 1; i += 1.f)
+	{
+		for (float j = 0.f; j < (grid_w / 3) - 1; j += 1.f)
+		{
+			float grid_t = grid_w / 3;
+
+			indexExtrusion.push_back(i * (grid_t)+j);
+			indexExtrusion.push_back((i + 1) * (grid_t)+(j + 1));
+			indexExtrusion.push_back((i + 1) * (grid_t)+j);
+
+			indexExtrusion.push_back(i * (grid_t)+j);
+			indexExtrusion.push_back((i + 1) * (grid_t)+j + 1);
+			indexExtrusion.push_back(i * (grid_t)+(j + 1));
+		}
+	}
+
+
+
+}
+
 void OpenGlWindow::paintExtrustion()
 {
 	paintGrid();
 
-	calculateExtrusion();
+	//calculateSimpleExtrusion();
+	calculateRotationExtrusion();
 
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
 	if (extrusion.size() > 0){
 		GLuint VBO2, VAO2, EBO2;
@@ -648,7 +696,7 @@ void OpenGlWindow::paintExtrustion()
 		glm::mat4 view;
 		glm::mat4 projection;
 		model = glm::rotate(model, /*(GLfloat)glfwGetTime() **/ 1.f, glm::vec3(1.f, 0.0f, 0.0f));
-		view = glm::translate(view, glm::vec3(-0.5f, 0.8f, -2.0f));
+		view = glm::translate(view, glm::vec3(-0.5f, 0.8f, -3.0f));
 		projection = glm::perspective(45.0f, (GLfloat)this->width() / (GLfloat)this->height(), 0.1f, 100.0f);
 
 		GLint modelLoc2 = glGetUniformLocation(basicShader2.GetProgram(), "model");

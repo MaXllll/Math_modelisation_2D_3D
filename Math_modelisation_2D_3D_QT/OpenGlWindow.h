@@ -38,7 +38,8 @@ private:
 	void paintGrid();
 
 	//Extrusion
-	void calculateExtrusion();
+	void calculateSimpleExtrusion();
+	void calculateRotationExtrusion();
 	void paintExtrustion();
 
 	//Utils
