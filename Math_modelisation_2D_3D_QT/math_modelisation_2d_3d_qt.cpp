@@ -13,6 +13,8 @@ Math_modelisation_2D_3D_QT::Math_modelisation_2D_3D_QT(QWidget *parent)
 	
 	QHBoxLayout* layout = new QHBoxLayout;
 
+	model.mode = model.BSURFACE;
+
 	layout->addWidget(mainWidget = new Widget(&model));
 	centralWidget()->setLayout(layout);
 

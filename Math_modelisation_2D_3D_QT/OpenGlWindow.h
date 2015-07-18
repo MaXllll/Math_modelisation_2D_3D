@@ -28,9 +28,11 @@ private:
 	void paintBSpline();
 
 	//B Surface
-	Point Decasteljau(float t, std::vector<Point> points);
-	std::vector<Point> CalculateBezier(std::vector<Point> polygon);
+	Point Decasteljau(float t, const std::vector<Point> &points);
+	void Decasteljau3D();
+	void CalculateBezier();
 	void initializeGrid();
+	void initializeControlPoints();
 	void paintBSurface();
 
 	//Utils

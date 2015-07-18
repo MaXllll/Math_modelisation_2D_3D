@@ -22,6 +22,7 @@
 #include <qdebug.h>
 
 EsgiShader basicShader;
+EsgiShader basicShader2;
 
 
 OpenGlWindow::OpenGlWindow(Model* model)
@@ -286,11 +287,16 @@ void OpenGlWindow::newBSpline()
 
 
 #pragma region BSurface
-const GLuint GRID_W = 5, GRID_H = 5;
+const GLuint GRID_W = 15, GRID_H = 15;
 std::vector<GLfloat> verticesGrid = std::vector<GLfloat>();
 std::vector<GLuint> indicesGrid = std::vector<GLuint>();
 
-Point OpenGlWindow::Decasteljau(float t, std::vector<Point> points)
+std::vector<float> BSurfaceControlPoint = std::vector<float>();
+std::vector<std::vector<Point>> BSurfaceControlPointP = std::vector<std::vector<Point>>();
+
+std::vector<float> BSurfacePoint = std::vector<float>();
+
+Point OpenGlWindow::Decasteljau(float t, const std::vector<Point> &points)
 {
 	//std::vector<Point> points = polygons[k].get_points();
 
@@ -298,12 +304,12 @@ Point OpenGlWindow::Decasteljau(float t, std::vector<Point> points)
 	arbre.push_back(points);
 	for (int i = 0; i < points.size() - 1; ++i)
 	{
-	std::vector<Point> nextLevel = std::vector <Point>();
+		std::vector<Point> nextLevel = std::vector <Point>();
 		for (int j = 0; j < arbre[i].size() - 1; ++j)
 		{
 			float x = (1.0 - t) * arbre[i][j].x_ + t * arbre[i][j + 1.0].x_;
 			float y = (1.0 - t) * arbre[i][j].y_ + t * arbre[i][j + 1.0].y_;
-			float z = (1.0 - t) * arbre[i][j].y_ + t * arbre[i][j + 1.0].y_;
+			float z = (1.0 - t) * arbre[i][j].z_ + t * arbre[i][j + 1.0].z_;
 			Point a = Point(x, y, z);
 			nextLevel.push_back(a);
 		}
@@ -312,21 +318,80 @@ Point OpenGlWindow::Decasteljau(float t, std::vector<Point> points)
 	return arbre[points.size() - 1][0];
 }
 
-std::vector<Point> OpenGlWindow::CalculateBezier(std::vector<Point> polygon)
+void OpenGlWindow::Decasteljau3D()
 {
+	BSurfacePoint.clear();
 	int pas = 30;
-	std::vector<Point> bezierR = std::vector<Point>();
-	if (polygon.size() >= 3)
+	for (int k = 1; k <= pas; ++k)
 	{
-		bezierR.push_back(polygon[0]);
-		for (int k = 1; k <= pas; ++k)
+		std::vector<Point> middleControlPoints = std::vector<Point>();
+		for (int i = 0; i < BSurfaceControlPointP.size(); i++)
 		{
-			Point a = Decasteljau((float)k / (float)pas, polygon);
-			bezierR.push_back(a);
+			middleControlPoints.push_back(Decasteljau((float)k / (float)pas, BSurfaceControlPointP[i]));
+		}
+
+		for (int j = 0; j < pas; j++){
+			Point a = Decasteljau((float)j / (float)pas, middleControlPoints);
+
+			BSurfacePoint.push_back(a.x_);
+			BSurfacePoint.push_back(a.y_);
+			BSurfacePoint.push_back(a.z_);
 		}
 	}
-	return bezierR;
 }
+
+//void OpenGlWindow::CalculateBezier()
+//{
+//	BSurfacePoint.clear();
+//	int pas = 30;
+//	//bezierR.push_back(BSurfaceControlPointP[0]);
+//	for (int k = 1; k <= pas; ++k)
+//	{
+//		for (int l = 1; l <= pas; ++l)
+//		{
+//			Point a = Decasteljau3D((float)k / (float)pas);
+//			BSurfacePoint.push_back(a.x_);
+//			BSurfacePoint.push_back(a.y_);
+//			BSurfacePoint.push_back(a.z_);
+//		}
+//	}
+//}
+
+void OpenGlWindow::initializeControlPoints()
+{
+	BSurfaceControlPoint.clear();
+	BSurfaceControlPointP.clear();
+	float incrementW = 0.1f;
+	float incrementH = 0.1f;
+
+	//float increment = GRID_H >= GRID_W?
+
+	//float incrementW = 3.f / GRID_W;
+	//float incrementH = 3.f / GRID_W;
+
+
+	for (float i = 0.f; i <= 6; i += 1.f)
+	{
+		BSurfaceControlPointP.push_back(std::vector<Point>());
+		float yIncr = 0;
+		for (float j = 0.f; j <= 6; j += 1.f)
+		{
+
+			BSurfaceControlPoint.push_back(j * incrementW);
+			BSurfaceControlPoint.push_back(yIncr);
+			BSurfaceControlPoint.push_back((i + 5.f) * incrementH);
+
+			BSurfaceControlPointP[i].push_back(Point(j * incrementW, yIncr, (i + 5.f) * incrementH));
+
+			if (j < 6 / 2)
+				yIncr += 0.1f;
+			else
+				yIncr -= 0.1f;
+		}
+	}
+
+}
+
 
 void OpenGlWindow::initializeGrid()
 {
@@ -339,13 +404,20 @@ void OpenGlWindow::initializeGrid()
 	//float incrementW = 3.f / GRID_W;
 	//float incrementH = 3.f / GRID_W;
 
+
 	for (float i = 0.f; i <= GRID_W; i += 1.f)
 	{
+		float yIncr = 0;
 		for (float j = 0.f; j <= GRID_H; j += 1.f)
 		{
 			verticesGrid.push_back(j * incrementW);
+			verticesGrid.push_back(0);
 			verticesGrid.push_back(i * incrementH);
-			verticesGrid.push_back(0.f);
+
+			if (j < GRID_H / 2)
+				yIncr += 0.1f;
+			else
+				yIncr -= 0.1f;
 		}
 	}
 
@@ -393,17 +465,9 @@ void OpenGlWindow::paintBSurface()
 
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBufferData(GL_ARRAY_BUFFER, verticesGrid.size() * sizeof(float), &verticesGrid.front(), GL_STATIC_DRAW);
-	//glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), &vertices, GL_STATIC_DRAW);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indicesGrid.size() * sizeof(float), &indicesGrid.front(), GL_STATIC_DRAW);
-	//glBufferDakta(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), &indices, GL_STATIC_DRAW);
-
-	//glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	//glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), &vertices, GL_STATIC_DRAW);
-
-	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-	//glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), &indices, GL_STATIC_DRAW);
 
 	// Position attribute
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
@@ -411,11 +475,13 @@ void OpenGlWindow::paintBSurface()
 
 	glBindVertexArray(0); // Unbind VAO
 
+	basicShader.Bind();
+
 	glm::mat4 model;
 	glm::mat4 view;
 	glm::mat4 projection;
-	model = glm::rotate(model, /*(GLfloat)glfwGetTime() **/ 0.f, glm::vec3(0.0f, 0.0f, 0.0f));
-	view = glm::translate(view, glm::vec3(0.0f, 0.0f, -5.0f));
+	model = glm::rotate(model, /*(GLfloat)glfwGetTime() **/ 1.f, glm::vec3(1.f, 0.0f, 0.0f));
+	view = glm::translate(view, glm::vec3(-0.5f, 0.8f, -2.0f));
 	projection = glm::perspective(45.0f, (GLfloat)this->width() / (GLfloat)this->height(), 0.1f, 100.0f);
 	// Get their uniform location
 	GLint modelLoc = glGetUniformLocation(basicShader.GetProgram(), "model");
@@ -429,6 +495,66 @@ void OpenGlWindow::paintBSurface()
 
 	glBindVertexArray(VAO);
 	glDrawElements(GL_TRIANGLE_STRIP, indicesGrid.size(), GL_UNSIGNED_INT, 0);
+	glBindVertexArray(0);
+
+	basicShader.Unbind();
+
+
+
+	/// Control Points
+	GLuint VBO2, VAO2;
+	glGenVertexArrays(1, &VAO2);
+	glGenBuffers(1, &VBO2);
+
+	glBindVertexArray(VAO2);
+
+	glBindBuffer(GL_ARRAY_BUFFER, VBO2);
+	glBufferData(GL_ARRAY_BUFFER, BSurfaceControlPoint.size() * sizeof(float), &BSurfaceControlPoint.front(), GL_STATIC_DRAW);
+
+	// Position attribute
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
+	glEnableVertexAttribArray(0);
+
+	glBindVertexArray(0); // Unbind VAO
+
+	basicShader2.Bind();
+
+	GLint modelLoc2 = glGetUniformLocation(basicShader2.GetProgram(), "model");
+	GLint viewLoc2 = glGetUniformLocation(basicShader2.GetProgram(), "view");
+	GLint projLoc2 = glGetUniformLocation(basicShader2.GetProgram(), "projection");
+	// Pass them to the shaders
+	glUniformMatrix4fv(modelLoc2, 1, GL_FALSE, glm::value_ptr(model));
+	glUniformMatrix4fv(viewLoc2, 1, GL_FALSE, glm::value_ptr(view));
+	// Note: currently we set the projection matrix each frame, but since the projection matrix rarely changes it's often best practice to set it outside the main loop only once.
+	glUniformMatrix4fv(projLoc2, 1, GL_FALSE, glm::value_ptr(projection));
+
+	glBindVertexArray(VAO2);
+	glDrawArrays(GL_POINTS, 0, BSurfaceControlPoint.size());
+	glBindVertexArray(0);
+
+	//Bezier Surface
+
+	Decasteljau3D();
+
+	GLuint VBO3, VAO3;
+	glGenVertexArrays(1, &VAO3);
+	glGenBuffers(1, &VBO3);
+
+	glBindVertexArray(VAO3);
+
+	glBindBuffer(GL_ARRAY_BUFFER, VBO3);
+	glBufferData(GL_ARRAY_BUFFER, BSurfacePoint.size() * sizeof(float), &BSurfacePoint.front(), GL_STATIC_DRAW);
+
+	// Position attribute
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
+	glEnableVertexAttribArray(0);
+
+	glBindVertexArray(0); // Unbind VAO
+
+	std::cout << BSurfacePoint.size() << std::endl;
+
+	glBindVertexArray(VAO3);
+	glDrawArrays(GL_POINTS, 0, BSurfacePoint.size());
 	glBindVertexArray(0);
 
 }
@@ -463,6 +589,10 @@ void OpenGlWindow::initializeGL()
 	basicShader.LoadFragmentShader("basic.fs");
 	basicShader.Create();
 
+	basicShader2.LoadVertexShader("basic2.vs"); // vs or vert
+	basicShader2.LoadFragmentShader("basic2.fs");
+	basicShader2.Create();
+
 	glEnable(GL_PROGRAM_POINT_SIZE);
 
 	setMouseTracking(true);
@@ -488,6 +618,7 @@ void OpenGlWindow::paintGL()
 	else if (model->mode == model->BSURFACE)
 	{
 		initializeGrid();
+		initializeControlPoints();
 		paintBSurface();
 	}
 
@@ -501,52 +632,54 @@ double convertViewportToOpenGLCoordinate(double x)
 
 void OpenGlWindow::mousePressEvent(QMouseEvent * event)
 {
-	Point clickP = Point();
-	clickP.x_ = convertViewportToOpenGLCoordinate(event->x() / (double)this->width());
-	clickP.y_ = -convertViewportToOpenGLCoordinate(event->y() / (double)this->height());
-	clickP.z_ = 0.0f;
+	if (model->mode == model->BSPLINE){
+		Point clickP = Point();
+		clickP.x_ = convertViewportToOpenGLCoordinate(event->x() / (double)this->width());
+		clickP.y_ = -convertViewportToOpenGLCoordinate(event->y() / (double)this->height());
+		clickP.z_ = 0.0f;
 
-	if (model->splineMode == model->CREATEPOINT)
-	{
-		controlPoints[currentSpline].push_back(clickP);
-		this->update();
-	}
-	else if (model->splineMode == model->MOVEPOINT)
-	{
-		hasClick = !hasClick;
-		if (hasClick)
+		if (model->splineMode == model->CREATEPOINT)
 		{
-			movingPoint = searchClosedPoint(clickP);
+			controlPoints[currentSpline].push_back(clickP);
+			this->update();
 		}
-	}
-	else if (model->splineMode == model->REPEATPOINT)
-	{
-		if (event->button() == Qt::LeftButton)
+		else if (model->splineMode == model->MOVEPOINT)
 		{
-			Point* point = searchClosedPoint(clickP);
-			if (point != nullptr)
+			hasClick = !hasClick;
+			if (hasClick)
 			{
-				for (int i = 0; i < controlPoints.size(); i++){
-					std::vector<Point>::iterator it = std::find(controlPoints[i].begin(), controlPoints[i].end(), *point);
-					if (it != controlPoints[i].end()){
-						controlPoints[i].insert(it, *point);
-						this->update();
-						return;
+				movingPoint = searchClosedPoint(clickP);
+			}
+		}
+		else if (model->splineMode == model->REPEATPOINT)
+		{
+			if (event->button() == Qt::LeftButton)
+			{
+				Point* point = searchClosedPoint(clickP);
+				if (point != nullptr)
+				{
+					for (int i = 0; i < controlPoints.size(); i++){
+						std::vector<Point>::iterator it = std::find(controlPoints[i].begin(), controlPoints[i].end(), *point);
+						if (it != controlPoints[i].end()){
+							controlPoints[i].insert(it, *point);
+							this->update();
+							return;
+						}
 					}
 				}
 			}
-		}
-		else
-		{
-			Point* point = searchClosedPoint(clickP);
-			if (point != nullptr)
+			else
 			{
-				for (int i = 0; i < controlPoints.size(); i++){
-					std::vector<Point>::iterator it = std::find(controlPoints[i].begin(), controlPoints[i].end(), *point);
-					if (it != controlPoints[i].end()){
-						controlPoints[i].erase(it);
-						this->update();
-						return;
+				Point* point = searchClosedPoint(clickP);
+				if (point != nullptr)
+				{
+					for (int i = 0; i < controlPoints.size(); i++){
+						std::vector<Point>::iterator it = std::find(controlPoints[i].begin(), controlPoints[i].end(), *point);
+						if (it != controlPoints[i].end()){
+							controlPoints[i].erase(it);
+							this->update();
+							return;
+						}
 					}
 				}
 			}
