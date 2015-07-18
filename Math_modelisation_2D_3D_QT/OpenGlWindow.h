@@ -35,6 +35,12 @@ private:
 	void initializeControlPoints();
 	void paintBSurface();
 
+	void paintGrid();
+
+	//Extrusion
+	void calculateExtrusion();
+	void paintExtrustion();
+
 	//Utils
 	Point* searchClosedPoint(Point click);
 
