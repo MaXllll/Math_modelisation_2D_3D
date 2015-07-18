@@ -8,11 +8,13 @@ out vec3 normal;
 uniform mat4 model;
 uniform mat4 view;
 uniform mat4 projection;
+uniform int isSurface;
 
 //On va de la face vers la source lumineuse
 const vec3 lightDirection = vec3(0.0, 0.0, 1.0);
 
-const vec4 color = vec4(1.0f, 0.5f, 0.2f, 1.0f);
+const vec4 colorSurface = vec4(1.0f, 0.5f, 0.2f, 1.0f);
+const vec4 colorControl = vec4(1.f, 1.f, 1.f, 1.0f);
 //const vec4 color = vec4(0.1f, 0.1f, 0.1f, 1.0f);
 
 
@@ -26,12 +28,21 @@ void main()
 	//Vertex lighting
 	//float intensity = dot(worldNormal, lightDirection);
 	//colorIntensity = color * intensity;
-		colorIntensity = color;
-	normal = worldNormal;
 
-    gl_Position = projection * view * model * vec4(position, 1.0f);
+	if(isSurface == 1){
+		colorIntensity = colorSurface;
+		normal = worldNormal;
 
-    //gl_Position = vec4(position, 1.0f);
-    gl_PointSize = 2;
+    	gl_Position = projection * view * model * vec4(position, 1.0f);
+    	gl_PointSize = 2;
+	}
+	else
+	{
+		colorIntensity = colorControl;
+		normal = worldNormal;
+
+    	gl_Position = projection * view * model * vec4(position, 1.0f);
+    	gl_PointSize = 3;
+	}
     //TexCoord = vec2(texCoord.x, 1.0 - texCoord.y);
 }

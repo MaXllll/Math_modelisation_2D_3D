@@ -24,6 +24,8 @@
 EsgiShader basicShader;
 EsgiShader basicShader2;
 
+EsgiShader bsplineShader;
+
 
 OpenGlWindow::OpenGlWindow(Model* model)
 {
@@ -208,6 +210,7 @@ void OpenGlWindow::calculateBSpline(int i)
 void OpenGlWindow::initializeBSpline()
 {
 	newBSpline();
+	movingPoint = new Point();
 
 	for (int i = 0; i < 100; i++)
 	{
@@ -231,6 +234,8 @@ void convertPointToFloat(int current){
 
 void OpenGlWindow::paintBSpline()
 {
+	bsplineShader.Bind();
+
 	for (int i = 0; i < bsplineC.size(); i++){
 
 		convertPointToFloat(i);
@@ -274,6 +279,7 @@ void OpenGlWindow::paintBSpline()
 			glBindVertexArray(0);
 		}
 	}
+	bsplineShader.Unbind();
 }
 
 void OpenGlWindow::newBSpline()
@@ -321,7 +327,7 @@ Point OpenGlWindow::Decasteljau(float t, const std::vector<Point> &points)
 void OpenGlWindow::Decasteljau3D()
 {
 	BSurfacePoint.clear();
-	int pas = 30;
+	int pas = 50;
 	for (int k = 1; k <= pas; ++k)
 	{
 		std::vector<Point> middleControlPoints = std::vector<Point>();
@@ -338,24 +344,7 @@ void OpenGlWindow::Decasteljau3D()
 			BSurfacePoint.push_back(a.z_);
 		}
 	}
-}
-
-//void OpenGlWindow::CalculateBezier()
-//{
-//	BSurfacePoint.clear();
-//	int pas = 30;
-//	//bezierR.push_back(BSurfaceControlPointP[0]);
-//	for (int k = 1; k <= pas; ++k)
-//	{
-//		for (int l = 1; l <= pas; ++l)
-//		{
-//			Point a = Decasteljau3D((float)k / (float)pas);
-//			BSurfacePoint.push_back(a.x_);
-//			BSurfacePoint.push_back(a.y_);
-//			BSurfacePoint.push_back(a.z_);
-//		}
-//	}
-//}
+}	
 
 void OpenGlWindow::initializeControlPoints()
 {
@@ -522,11 +511,13 @@ void OpenGlWindow::paintBSurface()
 	GLint modelLoc2 = glGetUniformLocation(basicShader2.GetProgram(), "model");
 	GLint viewLoc2 = glGetUniformLocation(basicShader2.GetProgram(), "view");
 	GLint projLoc2 = glGetUniformLocation(basicShader2.GetProgram(), "projection");
+	GLint isSurfaceLoc2 = glGetUniformLocation(basicShader2.GetProgram(), "isSurface");
 	// Pass them to the shaders
 	glUniformMatrix4fv(modelLoc2, 1, GL_FALSE, glm::value_ptr(model));
 	glUniformMatrix4fv(viewLoc2, 1, GL_FALSE, glm::value_ptr(view));
 	// Note: currently we set the projection matrix each frame, but since the projection matrix rarely changes it's often best practice to set it outside the main loop only once.
 	glUniformMatrix4fv(projLoc2, 1, GL_FALSE, glm::value_ptr(projection));
+	glUniform1i(isSurfaceLoc2, 0);
 
 	glBindVertexArray(VAO2);
 	glDrawArrays(GL_POINTS, 0, BSurfaceControlPoint.size());
@@ -548,6 +539,8 @@ void OpenGlWindow::paintBSurface()
 	// Position attribute
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
 	glEnableVertexAttribArray(0);
+
+	glUniform1i(isSurfaceLoc2, 1);
 
 	glBindVertexArray(0); // Unbind VAO
 
@@ -592,6 +585,10 @@ void OpenGlWindow::initializeGL()
 	basicShader2.LoadVertexShader("basic2.vs"); // vs or vert
 	basicShader2.LoadFragmentShader("basic2.fs");
 	basicShader2.Create();
+
+	bsplineShader.LoadVertexShader("BSpline.vs");
+	bsplineShader.LoadFragmentShader("BSpline.fs");
+	bsplineShader.Create();
 
 	glEnable(GL_PROGRAM_POINT_SIZE);
 
@@ -689,7 +686,7 @@ void OpenGlWindow::mousePressEvent(QMouseEvent * event)
 
 void OpenGlWindow::mouseMoveEvent(QMouseEvent *event)
 {
-	if (model->splineMode == model->MOVEPOINT && hasClick)
+	if (model->splineMode == model->MOVEPOINT && hasClick && movingPoint != nullptr)
 	{
 		movingPoint->x_ = convertViewportToOpenGLCoordinate(event->x() / (double)this->width());
 		movingPoint->y_ = -convertViewportToOpenGLCoordinate(event->y() / (double)this->height());
