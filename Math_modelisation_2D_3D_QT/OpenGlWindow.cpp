@@ -300,6 +300,7 @@ std::vector<float> BSurfaceControlPoint = std::vector<float>();
 std::vector<std::vector<Point>> BSurfaceControlPointP = std::vector<std::vector<Point>>();
 
 std::vector<float> BSurfacePoint = std::vector<float>();
+std::vector<GLuint> indexBSurface = std::vector<GLuint>();
 
 Point OpenGlWindow::Decasteljau(float t, const std::vector<Point> &points)
 {
@@ -343,6 +344,26 @@ void OpenGlWindow::Decasteljau3D()
 			BSurfacePoint.push_back(a.z_);
 		}
 	}
+
+	//Calculate index BSurface
+	int grid_w = pas;
+	int grid_h = pas;
+	
+	for (float i = 0.f; i < grid_h - 1; i += 1.f)
+	{
+		for (float j = 0.f; j < (grid_w) - 1; j += 1.f)
+		{
+			float grid_t = grid_w;
+
+			indexBSurface.push_back(i * (grid_t)+j);
+			indexBSurface.push_back((i + 1) * (grid_t)+(j + 1));
+			indexBSurface.push_back((i + 1) * (grid_t)+j);
+
+			indexBSurface.push_back(i * (grid_t)+j);
+			indexBSurface.push_back((i + 1) * (grid_t)+j + 1);
+			indexBSurface.push_back(i * (grid_t)+(j + 1));
+		}
+	}
 }	
 
 void OpenGlWindow::initializeControlPoints()
@@ -351,7 +372,7 @@ void OpenGlWindow::initializeControlPoints()
 	BSurfaceControlPointP.clear();
 	float incrementW = 0.1f;
 	float incrementH = 0.1f;
-
+		
 	//float increment = GRID_H >= GRID_W?
 
 	//float incrementW = 3.f / GRID_W;
@@ -422,35 +443,6 @@ void OpenGlWindow::initializeGrid()
 		}
 	}
 
-	//for (float i = 0.f; i < GRID_W; i += 1.f)
-	//{
-	//	for (float j = 0.f; j < GRID_H; j += 1.f)
-	//	{
-	//		if (j == 0.f)
-	//		{
-	//			//x2 cause Degenerate triangle
-	//			indicesGrid.push_back((GRID_H + 1) * i);
-	//			indicesGrid.push_back((GRID_H + 1) * i);
-
-	//			indicesGrid.push_back((GRID_H + 1) * (i + 1));
-	//			indicesGrid.push_back((GRID_H + 1) * i + 1);
-	//		}
-	//		else
-	//		{
-	//			indicesGrid.push_back((GRID_H + 1) * (i + 1) + j);
-	//			indicesGrid.push_back((GRID_H + 1) * i + j + 1);
-
-	//		}
-	//		//End of the line
-	//		if (j == GRID_H - 1)
-	//		{
-	//			//x2 cause Degenerate triangle
-	//			indicesGrid.push_back((GRID_H + 1) * (i + 1) + j + 1);
-	//			indicesGrid.push_back((GRID_H + 1) * (i + 1) + j + 1);
-	//		}
-	//	}
-	//}
-
 }
 
 void OpenGlWindow::paintBSurface()
@@ -501,14 +493,20 @@ void OpenGlWindow::paintBSurface()
 
 	Decasteljau3D();
 
-	GLuint VBO3, VAO3;
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+	GLuint VBO3, VAO3, EBO3;
 	glGenVertexArrays(1, &VAO3);
 	glGenBuffers(1, &VBO3);
+	glGenBuffers(1, &EBO3);
 
 	glBindVertexArray(VAO3);
 
 	glBindBuffer(GL_ARRAY_BUFFER, VBO3);
 	glBufferData(GL_ARRAY_BUFFER, BSurfacePoint.size() * sizeof(float), &BSurfacePoint.front(), GL_STATIC_DRAW);
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO3);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexBSurface.size() * sizeof(float), &indexBSurface.front(), GL_STATIC_DRAW);
 
 	// Position attribute
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
@@ -521,7 +519,7 @@ void OpenGlWindow::paintBSurface()
 	std::cout << BSurfacePoint.size() << std::endl;
 
 	glBindVertexArray(VAO3);
-	glDrawArrays(GL_POINTS, 0, BSurfacePoint.size());
+	glDrawElements(GL_TRIANGLES, indexBSurface.size(), GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
 
 }
@@ -584,7 +582,7 @@ void OpenGlWindow::calculateExtrusion()
 {
 	extrusion.clear();
 	indexExtrusion.clear();
-	int height = 20;
+	int height = 30;
 	float incr = 0.01;
 
 	for (int i = 0; i < height; i++){
@@ -621,6 +619,9 @@ void OpenGlWindow::paintExtrustion()
 	paintGrid();
 
 	calculateExtrusion();
+
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
 	if (extrusion.size() > 0){
 		GLuint VBO2, VAO2, EBO2;
 		glGenVertexArrays(1, &VAO2);
@@ -663,7 +664,7 @@ void OpenGlWindow::paintExtrustion()
 
 		glBindVertexArray(VAO2);
 		//glDrawArrays(GL_POINTS, 0, extrusion.size());
-		glDrawElements(GL_TRIANGLES, indexExtrusion.size(), GL_UNSIGNED_INT, 0);
+		glDrawElements(GL_POINTS, indexExtrusion.size(), GL_UNSIGNED_INT, 0);
 		glBindVertexArray(0);
 	}
 
