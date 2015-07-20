@@ -26,6 +26,8 @@ private slots:
 
 	void WireFrameMode();
 
+	void TypeExtrusion();
+
 private:
 	void createActions();
 	void createMenus();
@@ -48,6 +50,7 @@ private:
 	QAction *BSurfaceAct;
 
 	QAction *WireFrameAct;
+	QAction *TypeExtrusionAct;
 
 private:
 	Ui::Math_modelisation_2D_3D_QTClass ui;

@@ -619,11 +619,14 @@ void OpenGlWindow::calculateSimpleExtrusion()
 
 void OpenGlWindow::calculateRotationExtrusion()
 {
-
+	extrusion.clear();
+	indexExtrusion.clear();
+	if (bsplineC.size() == 0)
+		return;
 
 	double cosX, sinY;
 
-	for (int i = 0; i < 3; i+= 1){
+	for (int i = 0; i < 360; i+= 1){
 
 		cosX = cos(i + 1 * PI / 180.0);
 		sinY = sin(i + 1 * PI / 180.0);
@@ -631,9 +634,12 @@ void OpenGlWindow::calculateRotationExtrusion()
 		for (int j = 0; j < bsplineC[0].size(); j += 3)
 		{
 			
-			extrusion.push_back((bsplineC[0][j] + 0.6f) * cosX);
-			extrusion.push_back(sinY);
-			extrusion.push_back(bsplineC[0][j + 1] + 0.7f);
+			extrusion.push_back((bsplineC[0][j]) * sinY);		
+			extrusion.push_back(bsplineC[0][j] * cosX);
+			extrusion.push_back(bsplineC[0][j + 1]);
+			//extrusion.push_back((bsplineC[0][j]));		
+			//extrusion.push_back(i * 0.1);
+			//extrusion.push_back(bsplineC[0][j + 1]);
 		}
 	}
 	//std::cout << std::endl << std::endl;
@@ -665,8 +671,10 @@ void OpenGlWindow::paintExtrustion()
 {
 	//paintGrid();
 
-	calculateSimpleExtrusion();
-	//calculateRotationExtrusion();
+	if (!model->extrusionType)
+		calculateSimpleExtrusion();
+	else
+		calculateRotationExtrusion();
 
 	if (extrusion.size() > 0){
 		GLuint VBO2, VAO2, EBO2;

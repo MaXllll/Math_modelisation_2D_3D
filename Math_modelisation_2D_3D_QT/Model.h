@@ -17,6 +17,7 @@ struct Model
 	};
 
 	bool wireFrame = false;
+	bool extrusionType = false;
 
 	float degree;
 	float pas;

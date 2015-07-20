@@ -76,6 +76,13 @@ void Math_modelisation_2D_3D_QT::WireFrameMode()
 	mainWidget->repaint();
 }
 
+
+void Math_modelisation_2D_3D_QT::TypeExtrusion()
+{
+	model.extrusionType = !model.extrusionType;
+	mainWidget->repaint();
+}
+
 void Math_modelisation_2D_3D_QT::createActions()
 {
 	//New Menu
@@ -126,6 +133,12 @@ void Math_modelisation_2D_3D_QT::createActions()
 	WireFrameAct->setShortcuts(QKeySequence::Find);
 	WireFrameAct->setStatusTip(tr("Wire Frame mode"));
 	connect(WireFrameAct, SIGNAL(triggered()), this, SLOT(WireFrameMode()));
+
+	TypeExtrusionAct = new QAction(tr("&Extrusion Type"), this);
+	TypeExtrusionAct->setShortcuts(QKeySequence::Replace);
+	TypeExtrusionAct->setStatusTip(tr("Extrusion type"));
+	connect(TypeExtrusionAct, SIGNAL(triggered()), this, SLOT(TypeExtrusion()));
+
 }
 
 void Math_modelisation_2D_3D_QT::createMenus()
@@ -147,6 +160,7 @@ void Math_modelisation_2D_3D_QT::createMenus()
 	editModeMenu->addAction(repeatPointAct);
 
 	editMenu->addAction(WireFrameAct);
+	editMenu->addAction(TypeExtrusionAct);
 
 	menuBar()->addSeparator();
 
