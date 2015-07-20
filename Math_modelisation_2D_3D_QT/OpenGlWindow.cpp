@@ -371,6 +371,7 @@ void OpenGlWindow::Decasteljau3D()
 
 void OpenGlWindow::initializeControlPoints()
 {
+
 	BSurfaceControlPoint.clear();
 	BSurfaceControlPointP.clear();
 	float incrementW = 0.1f;
@@ -496,7 +497,6 @@ void OpenGlWindow::paintBSurface()
 
 	Decasteljau3D();
 
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
 	GLuint VBO3, VAO3, EBO3;
 	glGenVertexArrays(1, &VAO3);
@@ -529,7 +529,6 @@ void OpenGlWindow::paintBSurface()
 
 void OpenGlWindow::paintGrid()
 {
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 	GLuint VBO, VAO, EBO;
 	glGenVertexArrays(1, &VAO);
@@ -585,14 +584,14 @@ void OpenGlWindow::calculateSimpleExtrusion()
 {
 	extrusion.clear();
 	indexExtrusion.clear();
-	int height = 30;
+	int height = 50;
 	float incr = 0.01;
 
 	for (int i = 0; i < height; i++){
 		for (int j = 0; j < bsplineC[0].size(); j += 3)
 		{
 			extrusion.push_back(bsplineC[0][j] + 0.6f);
-			extrusion.push_back(i * incr);
+			extrusion.push_back(i  * incr);
 			extrusion.push_back(bsplineC[0][j + 1] + 0.7f);
 		}
 	}
@@ -663,12 +662,10 @@ void OpenGlWindow::calculateRotationExtrusion()
 
 void OpenGlWindow::paintExtrustion()
 {
-	paintGrid();
+	//paintGrid();
 
-	//calculateSimpleExtrusion();
-	calculateRotationExtrusion();
-
-	//glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	calculateSimpleExtrusion();
+	//calculateRotationExtrusion();
 
 	if (extrusion.size() > 0){
 		GLuint VBO2, VAO2, EBO2;
@@ -712,7 +709,7 @@ void OpenGlWindow::paintExtrustion()
 
 		glBindVertexArray(VAO2);
 		//glDrawArrays(GL_POINTS, 0, extrusion.size());
-		glDrawElements(GL_POINTS, indexExtrusion.size(), GL_UNSIGNED_INT, 0);
+		glDrawElements(GL_TRIANGLES, indexExtrusion.size(), GL_UNSIGNED_INT, 0);
 		glBindVertexArray(0);
 	}
 
@@ -767,6 +764,11 @@ void OpenGlWindow::paintGL()
 {
 	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	if (model->wireFrame)
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	else
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
 	// Activate shader
 	basicShader.Bind();

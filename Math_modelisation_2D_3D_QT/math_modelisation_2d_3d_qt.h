@@ -22,6 +22,8 @@ private slots:
 	void ExtrusionMode();
 	void BSurfaceMode();
 
+	void WireFrameMode();
+
 private:
 	void createActions();
 	void createMenus();
@@ -39,6 +41,8 @@ private:
 	QAction *BSplineAct;
 	QAction *ExtrusionAct;
 	QAction *BSurfaceAct;
+
+	QAction *WireFrameAct;
 
 private:
 	Ui::Math_modelisation_2D_3D_QTClass ui;

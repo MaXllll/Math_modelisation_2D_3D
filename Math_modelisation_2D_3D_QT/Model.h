@@ -16,7 +16,7 @@ struct Model
 		BSURFACE
 	};
 
-
+	bool wireFrame = false;
 
 	float degree;
 	float pas;

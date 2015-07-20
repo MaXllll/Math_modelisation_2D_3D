@@ -65,6 +65,11 @@ void Math_modelisation_2D_3D_QT::BSurfaceMode()
 	mainWidget->repaint();
 }
 
+void Math_modelisation_2D_3D_QT::WireFrameMode()
+{
+	model.wireFrame = !model.wireFrame;
+	mainWidget->repaint();
+}
 
 void Math_modelisation_2D_3D_QT::createActions()
 {
@@ -105,6 +110,11 @@ void Math_modelisation_2D_3D_QT::createActions()
 	//repeatPointAct->setShortcuts(QKeySequence::New);
 	repeatPointAct->setStatusTip(tr("Repeat a point mode"));
 	connect(repeatPointAct, SIGNAL(triggered()), this, SLOT(repeatPointMode()));
+
+	WireFrameAct = new QAction(tr("&Wire Frame"), this);
+	//repeatPointAct->setShortcuts(QKeySequence::New);
+	WireFrameAct->setStatusTip(tr("Wire Frame mode"));
+	connect(WireFrameAct, SIGNAL(triggered()), this, SLOT(WireFrameMode()));
 }
 
 void Math_modelisation_2D_3D_QT::createMenus()
@@ -124,6 +134,7 @@ void Math_modelisation_2D_3D_QT::createMenus()
 	editModeMenu->addAction(movePointAct);
 	editModeMenu->addAction(repeatPointAct);
 
+	editMenu->addAction(WireFrameAct);
 
 	menuBar()->addSeparator();
 

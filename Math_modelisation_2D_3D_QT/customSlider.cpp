@@ -22,7 +22,7 @@ customSlider::customSlider(float value, float min, float max, bool textOnLeft, f
 	slider->setMaximum(sliderGranularity);
 	connect(slider, SIGNAL(valueChanged(int)), this, SLOT(sliderValueChanged()));
 	setValue(value);
-	this->setFixedHeight(50);
+	this->setFixedHeight(60);
 
 }
 
