@@ -22,5 +22,6 @@ public:
 	Widget(Model* model);
 	void newbSpline();
 	void repaint();
+	void clear();
 };
 

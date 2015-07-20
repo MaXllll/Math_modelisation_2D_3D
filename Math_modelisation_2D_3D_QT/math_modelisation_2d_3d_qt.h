@@ -14,6 +14,8 @@ public:
 
 private slots:
 	void newBSpline();
+	void clear();
+
 	void createPointMode();
 	void movePointMode();
 	void repeatPointMode();
@@ -33,7 +35,10 @@ private:
 	QMenu *editMenu;
 	QMenu *editModeMenu;
 	QMenu *helpMenu;
+
 	QAction *newAct;
+	QAction *clearAct;
+
 	QAction *createPointAct;
 	QAction *movePointAct;
 	QAction *repeatPointAct;

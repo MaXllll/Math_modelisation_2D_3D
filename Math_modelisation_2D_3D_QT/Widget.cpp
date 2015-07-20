@@ -52,3 +52,8 @@ void Widget::repaint()
 {
 	glWindow->repaint();
 }
+
+void Widget::clear()
+{
+	glWindow->clear();
+}

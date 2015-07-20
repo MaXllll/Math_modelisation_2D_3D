@@ -10,6 +10,7 @@ public:
 	OpenGlWindow(Model* model);
 	Model* model;
 	void newBSpline();
+	void clear();
 
 protected:
 	void initializeGL();
@@ -44,8 +45,6 @@ private:
 
 	//Utils
 	Point* searchClosedPoint(Point click);
-
-
 
 	Point* movingPoint;
 	bool hasClick = false;

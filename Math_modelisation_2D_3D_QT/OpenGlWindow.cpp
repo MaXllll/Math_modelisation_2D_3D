@@ -519,8 +519,6 @@ void OpenGlWindow::paintBSurface()
 
 	glBindVertexArray(0); // Unbind VAO
 
-	std::cout << BSurfacePoint.size() << std::endl;
-
 	glBindVertexArray(VAO3);
 	glDrawElements(GL_TRIANGLES, indexBSurface.size(), GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
@@ -582,8 +580,11 @@ std::vector<GLuint> indexExtrusion = std::vector<GLuint>();
 
 void OpenGlWindow::calculateSimpleExtrusion()
 {
+
 	extrusion.clear();
 	indexExtrusion.clear();
+	if (bsplineC.size() == 0)
+		return;
 	int height = 50;
 	float incr = 0.01;
 
@@ -880,4 +881,18 @@ Point* OpenGlWindow::searchClosedPoint(Point click)
 
 	return nullptr;
 }
+
+void OpenGlWindow::clear()
+{
+	currentSpline = 0;
+	controlPoints.clear();
+	bsplineC.clear();
+	controlP.clear();
+	repaint();
+
+	controlP.push_back(std::vector<float>());
+	controlPoints.push_back(std::vector<Point>());
+	bsplineC.push_back(std::vector<float>());
+}
+
 #pragma endregion

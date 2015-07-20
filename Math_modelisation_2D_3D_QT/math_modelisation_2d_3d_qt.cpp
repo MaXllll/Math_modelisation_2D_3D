@@ -29,6 +29,11 @@ void Math_modelisation_2D_3D_QT::newBSpline()
 	mainWidget->newbSpline();
 }
 
+void Math_modelisation_2D_3D_QT::clear()
+{
+	mainWidget->clear();
+}
+
 void Math_modelisation_2D_3D_QT::createPointMode()
 {
 	model.splineMode = model.CREATEPOINT;
@@ -79,6 +84,12 @@ void Math_modelisation_2D_3D_QT::createActions()
 	newAct->setStatusTip(tr("Create a B Spline"));
 	connect(newAct, SIGNAL(triggered()), this, SLOT(newBSpline()));
 
+	//Clear
+	clearAct = new QAction(tr("&Clear"), this);
+	clearAct->setShortcuts(QKeySequence::Copy);
+	clearAct->setStatusTip(tr("Clear"));
+	connect(clearAct, SIGNAL(triggered()), this, SLOT(clear()));
+
 	//Edit Menu
 	createPointAct = new QAction(tr("&Create Point"), this);
 
@@ -112,7 +123,7 @@ void Math_modelisation_2D_3D_QT::createActions()
 	connect(repeatPointAct, SIGNAL(triggered()), this, SLOT(repeatPointMode()));
 
 	WireFrameAct = new QAction(tr("&Wire Frame"), this);
-	//repeatPointAct->setShortcuts(QKeySequence::New);
+	WireFrameAct->setShortcuts(QKeySequence::Find);
 	WireFrameAct->setStatusTip(tr("Wire Frame mode"));
 	connect(WireFrameAct, SIGNAL(triggered()), this, SLOT(WireFrameMode()));
 }
@@ -121,6 +132,7 @@ void Math_modelisation_2D_3D_QT::createMenus()
 {
 	fileMenu = menuBar()->addMenu(tr("&File"));
 	fileMenu->addAction(newAct);
+	fileMenu->addAction(clearAct);
 
 	editMenu = menuBar()->addMenu(tr("&Edit"));
 
