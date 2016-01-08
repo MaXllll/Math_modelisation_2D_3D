@@ -125,27 +125,7 @@ void OpenGlWindow::initializeControlPoints()
 	//float incrementH = 3.f / GRID_W;
 
 
-	for (float i = 0.f; i <= 3; i += 1.f)
-	{
-		BSurfaceControlPointP.push_back(std::vector<Point>());
-		float yIncr = 0;
-		for (float j = 0.f; j <= 3; j += 1.f)
-		{
-
-			BSurfaceControlPoint.push_back(j * incrementW);
-			BSurfaceControlPoint.push_back(yIncr);
-			BSurfaceControlPoint.push_back((i + 5.f) * incrementH);
-
-			BSurfaceControlPointP[i].push_back(Point(j * incrementW, yIncr, (i + 5.f) * incrementH));
-
-			if ((int)j % 2 == 0)
-				yIncr += 0.1f;
-			else
-				yIncr -= 0.3f;
-		}
-	}
-
-	//for (float i = 0.f; i <= 3; i += 1.f)
+	//for (float i = 0.f; i <= 0; i += 1.f)
 	//{
 	//	BSurfaceControlPointP.push_back(std::vector<Point>());
 	//	float yIncr = 0;
@@ -164,6 +144,93 @@ void OpenGlWindow::initializeControlPoints()
 	//			yIncr -= 0.3f;
 	//	}
 	//}
+
+	BSurfaceControlPointP.push_back(std::vector<Point>());
+	float yIncr = 0.0f;
+	int i = 0;
+
+	for (float j = 0.f; j <= 3; j += 1.f)
+	{
+
+		BSurfaceControlPoint.push_back(j * incrementW);
+		BSurfaceControlPoint.push_back(yIncr);
+		BSurfaceControlPoint.push_back((i + 5.f) * incrementH);
+
+		BSurfaceControlPointP[i].push_back(Point(j * incrementW, yIncr, (i + 5.f) * incrementH));
+
+		//if (j == 0.0f)
+		//	yIncr += 0.1f;
+		//else if (j == 1.0f)
+		//	yIncr -= 0.3f;
+	}
+
+	BSurfaceControlPointP.push_back(std::vector<Point>());
+	yIncr = 0.0f;
+	i = 1;
+	//incrementW = -incrementW;
+
+	for (float j = 5.f; j >= 2.0f; j -= 1.f)
+	{
+		float x = 3.0f * incrementH;
+		float y = yIncr;
+		float z = j * incrementW;
+
+		BSurfaceControlPoint.push_back(x);
+		BSurfaceControlPoint.push_back(y);
+		BSurfaceControlPoint.push_back(z);
+
+		BSurfaceControlPointP[i].push_back(Point(x, y, z));
+
+		//if (j == 0.0f)
+		//	yIncr += 0.1f;
+		//else if (j == 1.0f)
+		//	yIncr -= 0.3f;
+	}
+
+	BSurfaceControlPointP.push_back(std::vector<Point>());
+	yIncr = 0.0f;
+	i = 2;
+	//incrementW = -incrementW;
+
+	for (float j = 3.f; j >= 0.0f; j -= 1.f)
+	{
+		float x = j * incrementW;
+		float y = yIncr;
+		float z = 2.0f * incrementH;
+
+		BSurfaceControlPoint.push_back(x);
+		BSurfaceControlPoint.push_back(y);
+		BSurfaceControlPoint.push_back(z);
+
+		BSurfaceControlPointP[i].push_back(Point(x, y, z));
+
+		//if (j == 0.0f)
+		//	yIncr += 0.1f;
+		//else if (j == 1.0f)
+		//	yIncr -= 0.3f;
+	}
+
+	BSurfaceControlPointP.push_back(std::vector<Point>());
+	yIncr = 0.0f;
+	i = 3;
+
+	for (float j = 2.f; j <= 5.0f; j += 1.f)
+	{
+		float x = 0;
+		float y = yIncr;
+		float z = j * incrementW;
+
+		BSurfaceControlPoint.push_back(x);
+		BSurfaceControlPoint.push_back(y);
+		BSurfaceControlPoint.push_back(z);
+
+		BSurfaceControlPointP[i].push_back(Point(x, y, z));
+
+		//if (j == 0.0f)
+		//	yIncr += 0.1f;
+		//else if (j == 1.0f)
+		//	yIncr -= 0.3f;
+	}
 
 }
 
@@ -257,33 +324,33 @@ void OpenGlWindow::paintBSurface()
 
 	//Bezier Surface
 
-	Decasteljau3D();
+	//Decasteljau3D();
 
 
-	GLuint VBO3, VAO3, EBO3;
-	glGenVertexArrays(1, &VAO3);
-	glGenBuffers(1, &VBO3);
-	glGenBuffers(1, &EBO3);
+	//GLuint VBO3, VAO3, EBO3;
+	//glGenVertexArrays(1, &VAO3);
+	//glGenBuffers(1, &VBO3);
+	//glGenBuffers(1, &EBO3);
 
-	glBindVertexArray(VAO3);
+	//glBindVertexArray(VAO3);
 
-	glBindBuffer(GL_ARRAY_BUFFER, VBO3);
-	glBufferData(GL_ARRAY_BUFFER, BSurfacePoint.size() * sizeof(float), &BSurfacePoint.front(), GL_STATIC_DRAW);
+	//glBindBuffer(GL_ARRAY_BUFFER, VBO3);
+	//glBufferData(GL_ARRAY_BUFFER, BSurfacePoint.size() * sizeof(float), &BSurfacePoint.front(), GL_STATIC_DRAW);
 
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO3);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexBSurface.size() * sizeof(float), &indexBSurface.front(), GL_STATIC_DRAW);
+	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO3);
+	//glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexBSurface.size() * sizeof(float), &indexBSurface.front(), GL_STATIC_DRAW);
 
-	// Position attribute
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
-	glEnableVertexAttribArray(0);
+	//// Position attribute
+	//glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
+	//glEnableVertexAttribArray(0);
 
-	glUniform1i(isSurfaceLoc2, 1);
+	//glUniform1i(isSurfaceLoc2, 1);
 
-	glBindVertexArray(0); // Unbind VAO
+	//glBindVertexArray(0); // Unbind VAO
 
-	glBindVertexArray(VAO3);
-	glDrawElements(GL_TRIANGLES, indexBSurface.size(), GL_UNSIGNED_INT, 0);
-	glBindVertexArray(0);
+	//glBindVertexArray(VAO3);
+	//glDrawElements(GL_TRIANGLES, indexBSurface.size(), GL_UNSIGNED_INT, 0);
+	//glBindVertexArray(0);
 
 }
 
