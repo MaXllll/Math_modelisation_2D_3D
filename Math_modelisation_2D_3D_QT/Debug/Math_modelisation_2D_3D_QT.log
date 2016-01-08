@@ -1,12 +1,10 @@
-﻿Build started 20/07/2015 14:34:23.
+﻿Build started 08/01/2016 16:48:23.
      1>Project "C:\Users\MaxL\Documents\Math_modelisation_2D_3D\Math_modelisation_2D_3D_QT\Math_modelisation_2D_3D_QT.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I.\GeneratedFiles /I. /IC:\Qt\Qt5.5.0\5.5\msvc2013\include /I.\GeneratedFiles\Debug /IC:\Qt\Qt5.5.0\5.5\msvc2013\include\QtCore /IC:\Qt\Qt5.5.0\5.5\msvc2013\include\QtGui /IC:\Qt\Qt5.5.0\5.5\msvc2013\include\QtOpenGL /IC:\Qt\Qt5.5.0\5.5\msvc2013\include\QtWidgets /I"..\Libs\glfw-3.1.1.bin.WIN32\include" /I..\Libs\SOIL\src /I..\Libs\glm /I..\Libs\Qt\Include /Zi /nologo /W1 /WX- /Od /Oy- /D UNICODE /D WIN32 /D WIN64 /D QT_DLL /D QT_CORE_LIB /D QT_GUI_LIB /D QT_OPENGL_LIB /D QT_WIDGETS_LIB /Gm- /EHsc /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt OpenGlWindow.cpp math_modelisation_2d_3d_qt.cpp
-         OpenGlWindow.cpp
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I.\GeneratedFiles /I. /IC:\Qt\Qt5.5.1\5.5\msvc2013\include /I.\GeneratedFiles\Debug /IC:\Qt\Qt5.5.1\5.5\msvc2013\include\QtCore /IC:\Qt\Qt5.5.1\5.5\msvc2013\include\QtGui /IC:\Qt\Qt5.5.1\5.5\msvc2013\include\QtOpenGL /IC:\Qt\Qt5.5.1\5.5\msvc2013\include\QtWidgets /I"..\Libs\glfw-3.1.1.bin.WIN32\include" /I..\Libs\SOIL\src /I..\Libs\glm /I..\Libs\Qt\Include /Zi /nologo /W1 /WX- /Od /Oy- /D UNICODE /D WIN32 /D WIN64 /D QT_DLL /D QT_CORE_LIB /D QT_GUI_LIB /D QT_OPENGL_LIB /D QT_WIDGETS_LIB /Gm- /EHsc /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt math_modelisation_2d_3d_qt.cpp
          math_modelisation_2d_3d_qt.cpp
-         Generating Code...
        Link:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\MaxL\Documents\Math_modelisation_2D_3D\Win32\Debug\\Math_modelisation_2D_3D_QT.exe" /NOLOGO /LIBPATH:C:\Qt\Qt5.5.0\5.5\msvc2013\lib /LIBPATH:"..\Libs\glew-1.12.0\bin\Release\Win32" /LIBPATH:..\Libs\SOIL\LIB qtmaind.lib Qt5Cored.lib Qt5Guid.lib Qt5OpenGLd.lib opengl32.lib glu32.lib Qt5Widgetsd.lib glew32s.lib SOIL.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\MaxL\Documents\Math_modelisation_2D_3D\Win32\Debug\Math_modelisation_2D_3D_QT.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\MaxL\Documents\Math_modelisation_2D_3D\Win32\Debug\Math_modelisation_2D_3D_QT.lib" /MACHINE:X86 /SAFESEH Debug\customSlider.obj
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\MaxL\Documents\Math_modelisation_2D_3D\Win32\Debug\\Math_modelisation_2D_3D_QT.exe" /NOLOGO /LIBPATH:C:\Qt\Qt5.5.1\5.5\msvc2013\lib /LIBPATH:"..\Libs\glew-1.12.0\bin\Release\Win32" /LIBPATH:..\Libs\SOIL\LIB qtmaind.lib Qt5Cored.lib Qt5Guid.lib Qt5OpenGLd.lib opengl32.lib glu32.lib Qt5Widgetsd.lib glew32s.lib SOIL.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\MaxL\Documents\Math_modelisation_2D_3D\Win32\Debug\Math_modelisation_2D_3D_QT.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\MaxL\Documents\Math_modelisation_2D_3D\Win32\Debug\Math_modelisation_2D_3D_QT.lib" /MACHINE:X86 /SAFESEH Debug\customSlider.obj
          Debug\EsgiShader.obj
          Debug\moc_customSlider.obj
          Debug\moc_math_modelisation_2d_3d_qt.obj
@@ -22,4 +20,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:02.01
+Time Elapsed 00:00:01.04

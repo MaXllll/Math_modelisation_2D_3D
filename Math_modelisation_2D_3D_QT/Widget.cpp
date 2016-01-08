@@ -45,7 +45,7 @@ void Widget::sliderValueChanged()
 
 void Widget::newbSpline()
 {
-	glWindow->newBSpline();
+	//glWindow->newBSpline();
 }
 
 void Widget::repaint()
